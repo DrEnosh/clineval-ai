@@ -115,7 +115,39 @@ boolean, not a phrase.
 
 ## 4. Benchmark design
 
-`app/benchmark/generator.py` produces one hand-authored case per `CaseType`.
+Two artifacts, with different provenance. Full methodology in
+[docs/BENCHMARK.md](BENCHMARK.md).
+
+### The generated benchmark (Phase 2)
+
+`app/benchmark/synthesizer.py` runs a ground-truth-first pipeline: a
+`StructuredCase` is built from a seed, and the note, reference summary, and
+annotations are each rendered *independently* from it. Nothing is written first
+and back-annotated, so the note and its annotations cannot disagree, and the
+summary tests information retention rather than paraphrase.
+
+```
+app/benchmark/
+  content.py          curated clinical vocabulary, with condition-drug-lab links
+  case_builder.py     CaseDraft: entity id allocation, sampling, base scaffold
+  features.py         one builder per failure-mode category
+  criticality.py      CR-01 .. CR-10, the enumerated importance rules
+  note_renderer.py    structured case -> source note
+  summary_renderer.py structured case -> reference summary   (independent)
+  annotator.py        structured case -> gold-standard facts (independent)
+  synthesizer.py      pipeline + persistence + metadata
+  integrity.py        twelve checks, each proven to fire
+  curated.py          the hand-authored Phase 1 seed set
+```
+
+Every annotation carries a `source_ref` (the structured entity it came from) and
+a `criticality_rule` (the rule that set its importance), which is what makes the
+integrity checks possible: an annotation that cannot be traced to real
+structured content is a detectable error rather than a silent one.
+
+### The curated seed set (Phase 1)
+
+`app/benchmark/curated.py` produces one hand-authored case per `CaseType`.
 Each case is built to exercise the specific failure mode it is named for:
 
 | Case | Type | Exercises |
@@ -237,7 +269,7 @@ must check. `.env` is gitignored; `.env.example` is committed.
 | Phase | Scope | Status |
 |---|---|---|
 | 1 | Architecture, schemas, evaluator interfaces, 10-case benchmark, minimal API, tests | **Complete** |
-| 2 | Scaled synthetic benchmark generation | Pending |
+| 2 | Ground-truth-first benchmark generation, criticality rules, integrity audit | **Complete** |
 | 3 | Extended gold-standard annotation tooling | Pending |
 | 4 | Evaluation engine implementations | Pending |
 | 5 | Failure detection (hallucination, negation, temporal, medication) | Pending |

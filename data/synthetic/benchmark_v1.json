@@ -31,6 +31,10 @@
     "clinical_timeline": [
       "Annual wellness visit; no interval changes since visit 11 months ago"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "45-year-old female presents for annual wellness visit. She reports feeling well with no new complaints. History of essential hypertension, well-controlled on lisinopril 10 mg daily. No chest pain, shortness of breath, or lower extremity edema. No known drug allergies. Continues regular exercise three times weekly. Vital signs: BP 122/78 mmHg, HR 72 bpm, Temp 98.4 F. Physical exam unremarkable. Basic metabolic panel within normal limits. Plan: continue lisinopril 10 mg daily, routine health maintenance labs ordered, return to clinic in one year or sooner if new symptoms develop.",
     "reference_summary": "45-year-old female here for a routine annual wellness visit. Hypertension remains well-controlled on lisinopril 10 mg daily; no new symptoms and exam is unremarkable. Plan is to continue current medication and follow up in one year.",
     "critical_facts": [],
@@ -41,7 +45,9 @@
         "content": "Patient reports feeling well, no new symptoms",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_001-F002",
@@ -49,7 +55,9 @@
         "content": "Hypertension is well-controlled on current regimen",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "medication_facts": [
@@ -60,6 +68,8 @@
         "importance": "non_critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Lisinopril",
         "status": "current",
         "dose": "10 mg oral daily",
@@ -74,7 +84,9 @@
         "content": "No chest pain, shortness of breath, or lower extremity edema",
         "importance": "non_critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_001-F004",
@@ -82,10 +94,18 @@
         "content": "No known drug allergies",
         "importance": "non_critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
+    "contradiction_facts": [],
     "expected_risk_flags": [],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "45-54",
       "sex": "female",
@@ -125,6 +145,10 @@
     "clinical_timeline": [
       "Follow-up 3 months after prior nephrology visit"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "68-year-old male with chronic kidney disease stage 3, type 2 diabetes, and hypertension returns for nephrology follow-up. Serum creatinine has increased from 1.4 mg/dL three months ago to 1.9 mg/dL today, with a corresponding decline in estimated GFR from 52 to 38 mL/min/1.73m2. This represents a clinically significant decline in renal function since the last visit. Patient denies changes in urine output, hematuria, or flank pain. Blood pressure today 138/86 mmHg. Dietary sodium and protein counseling provided. Continue lisinopril 20 mg daily for blood pressure control. Plan: repeat basic metabolic panel in 2 weeks, consider metformin dose adjustment given renal decline, renal ultrasound if creatinine continues to rise.",
     "reference_summary": "68-year-old male with CKD stage 3, diabetes, and hypertension. Creatinine increased from 1.4 to 1.9 mg/dL over 3 months (eGFR 52 to 38), a significant decline in renal function requiring close follow-up and possible metformin adjustment. Dietary counseling given; repeat labs in 2 weeks.",
     "critical_facts": [
@@ -134,7 +158,9 @@
         "content": "Creatinine increased from 1.4 to 1.9 mg/dL over 3 months, consistent with significant decline in renal function",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_002-F002",
@@ -142,7 +168,9 @@
         "content": "eGFR declined from 52 to 38 mL/min/1.73m2",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "non_critical_facts": [
@@ -152,7 +180,9 @@
         "content": "Dietary sodium and protein counseling provided",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "medication_facts": [
@@ -163,6 +193,8 @@
         "importance": "non_critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Lisinopril",
         "status": "current",
         "dose": "20 mg daily",
@@ -175,6 +207,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Metformin",
         "status": "current",
         "dose": "1000 mg twice daily",
@@ -189,6 +223,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "earlier_value": "1.4 mg/dL",
         "later_value": "1.9 mg/dL",
         "unit": "mg/dL",
@@ -201,6 +237,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "earlier_value": "52 mL/min/1.73m2",
         "later_value": "38 mL/min/1.73m2",
         "unit": "mL/min/1.73m2",
@@ -214,9 +252,12 @@
         "content": "Denies changes in urine output, hematuria, or flank pain",
         "importance": "non_critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
+    "contradiction_facts": [],
     "expected_risk_flags": [
       {
         "flag_id": "CASE_002-R001",
@@ -224,6 +265,11 @@
         "severity": "HIGH"
       }
     ],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "65-74",
       "sex": "male",
@@ -260,6 +306,10 @@
     "clinical_timeline": [
       "5-day history of cough prior to today's visit"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "38-year-old female presents with a 5-day history of productive cough, mild fatigue, and low-grade subjective fevers. Denies shortness of breath at rest. Chest is clear to auscultation bilaterally with no wheezes, rales, or rhonchi; no signs of pneumonia on exam. SpO2 98% on room air, temp 99.1 F. Chest X-ray was not obtained as it is not indicated given a reassuring exam. Presentation is consistent with acute viral bronchitis. No antibiotics prescribed given likely viral etiology. Allergic to penicillin (rash). Albuterol inhaler prescribed for symptomatic relief as needed. Counseled on supportive care: fluids, rest, over-the-counter antitussives. Return if symptoms worsen or fever persists beyond 3 days.",
     "reference_summary": "38-year-old female with 5 days of cough consistent with acute viral bronchitis. Exam and vitals reassuring, no signs of pneumonia, no imaging or antibiotics indicated. Albuterol inhaler given for symptomatic relief; penicillin allergy noted. Supportive care advised.",
     "critical_facts": [
@@ -269,7 +319,9 @@
         "content": "No signs of pneumonia on exam; chest X-ray not indicated at this visit",
         "importance": "critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_003-F002",
@@ -277,7 +329,9 @@
         "content": "No antibiotics prescribed; presentation consistent with viral etiology",
         "importance": "critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_003-F003",
@@ -285,7 +339,9 @@
         "content": "Allergic to penicillin (rash)",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "non_critical_facts": [
@@ -295,7 +351,9 @@
         "content": "5-day history of productive cough and mild fatigue",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "medication_facts": [
@@ -306,6 +364,8 @@
         "importance": "non_critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Albuterol",
         "status": "new",
         "dose": "as needed",
@@ -320,9 +380,12 @@
         "content": "Denies shortness of breath at rest",
         "importance": "non_critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
+    "contradiction_facts": [],
     "expected_risk_flags": [
       {
         "flag_id": "CASE_003-R001",
@@ -330,6 +393,11 @@
         "severity": "HIGH"
       }
     ],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "35-44",
       "sex": "female",
@@ -356,6 +424,10 @@
     "clinical_timeline": [
       "Preoperative evaluation prior to elective knee arthroscopy"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "58-year-old male presents for preoperative evaluation prior to elective knee arthroscopy. Patient denies any history of diabetes mellitus. No known drug allergies. Denies prior history of myocardial infarction or stroke. Denies current tobacco use; quit smoking 10 years ago. No history of bleeding disorders. Cardiac exam unremarkable, lungs clear. Cleared for surgery from a medical standpoint.",
     "reference_summary": "58-year-old male cleared for elective knee arthroscopy. No history of diabetes, no known drug allergies, no prior MI or stroke, no bleeding disorder history, and a former smoker (quit 10 years ago). Exam unremarkable.",
     "critical_facts": [],
@@ -366,7 +438,9 @@
         "content": "Cardiac exam unremarkable, lungs clear",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "medication_facts": [],
@@ -378,7 +452,9 @@
         "content": "No history of diabetes mellitus",
         "importance": "critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_004-F003",
@@ -386,7 +462,9 @@
         "content": "No known drug allergies",
         "importance": "critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_004-F004",
@@ -394,7 +472,9 @@
         "content": "No prior history of myocardial infarction or stroke",
         "importance": "critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_004-F005",
@@ -402,7 +482,9 @@
         "content": "No history of bleeding disorders",
         "importance": "critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_004-F006",
@@ -410,9 +492,12 @@
         "content": "Denies current tobacco use; quit smoking 10 years ago",
         "importance": "non_critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
+    "contradiction_facts": [],
     "expected_risk_flags": [
       {
         "flag_id": "CASE_004-R001",
@@ -420,6 +505,11 @@
         "severity": "CRITICAL"
       }
     ],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "55-64",
       "sex": "male",
@@ -452,6 +542,10 @@
     "clinical_timeline": [
       "Two weeks after furosemide dose increase"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "74-year-old female with heart failure with reduced ejection fraction returns for follow-up. Two weeks ago, weight was 68 kg; today weight is 71 kg, consistent with fluid retention. Furosemide dose was increased from 20 mg to 40 mg daily two weeks ago in response to that weight gain. Patient reports improved but persistent lower extremity edema since the dose increase. Metoprolol succinate 50 mg daily unchanged. Vitals: BP 118/74 mmHg, HR 68 bpm. Plan: continue furosemide 40 mg daily, recheck weight and basic metabolic panel in one week.",
     "reference_summary": "74-year-old female with HFrEF, weight increased from 68 kg to 71 kg over two weeks prompting a furosemide increase from 20 mg to 40 mg daily; edema improved but persistent since that change. Metoprolol unchanged. Recheck weight and labs in one week.",
     "critical_facts": [
@@ -461,7 +555,9 @@
         "content": "Weight increased from 68 kg to 71 kg over two weeks, consistent with fluid retention",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "non_critical_facts": [],
@@ -473,6 +569,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Furosemide",
         "status": "changed_dose",
         "dose": "40 mg daily (increased from 20 mg)",
@@ -485,6 +583,8 @@
         "importance": "non_critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Metoprolol succinate",
         "status": "current",
         "dose": "50 mg daily",
@@ -499,6 +599,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "earlier_value": "68 kg",
         "later_value": "71 kg",
         "unit": "kg",
@@ -511,6 +613,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "earlier_value": "20 mg daily",
         "later_value": "40 mg daily",
         "unit": "mg/day",
@@ -518,6 +622,7 @@
       }
     ],
     "negations": [],
+    "contradiction_facts": [],
     "expected_risk_flags": [
       {
         "flag_id": "CASE_005-R001",
@@ -525,6 +630,11 @@
         "severity": "HIGH"
       }
     ],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "70-79",
       "sex": "female",
@@ -557,6 +667,10 @@
     "clinical_timeline": [
       "Follow-up one month after amlodipine was discontinued"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "64-year-old male returns for follow-up. Amlodipine was discontinued last month due to peripheral edema. Lisinopril 20 mg daily continued for blood pressure control, now at goal. Metformin dose was increased from 500 mg to 1000 mg twice daily for improved glycemic control given an elevated A1c. Atorvastatin 20 mg daily newly prescribed today for hyperlipidemia. Patient has a documented history of taking hydrochlorothiazide in the past, discontinued approximately two years ago due to hyponatremia; not restarted. No peripheral edema on today's exam.",
     "reference_summary": "64-year-old male with hypertension, diabetes, and hyperlipidemia. Amlodipine was stopped last month for edema, which has resolved. Lisinopril continued at goal BP. Metformin increased from 500 mg to 1000 mg twice daily for glycemic control. Atorvastatin 20 mg daily newly started today. Prior hydrochlorothiazide use (stopped ~2 years ago for hyponatremia) is not restarted.",
     "critical_facts": [],
@@ -569,6 +683,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Amlodipine",
         "status": "discontinued",
         "dose": "was 5 mg daily",
@@ -581,6 +697,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Lisinopril",
         "status": "current",
         "dose": "20 mg daily",
@@ -593,6 +711,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Metformin",
         "status": "changed_dose",
         "dose": "1000 mg twice daily (increased from 500 mg)",
@@ -605,6 +725,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Atorvastatin",
         "status": "new",
         "dose": "20 mg daily",
@@ -617,6 +739,8 @@
         "importance": "non_critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Hydrochlorothiazide",
         "status": "historical",
         "dose": null,
@@ -631,6 +755,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "earlier_value": "500 mg twice daily",
         "later_value": "1000 mg twice daily",
         "unit": "mg",
@@ -644,9 +770,12 @@
         "content": "No peripheral edema on today's exam",
         "importance": "non_critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
+    "contradiction_facts": [],
     "expected_risk_flags": [
       {
         "flag_id": "CASE_006-R001",
@@ -654,6 +783,11 @@
         "severity": "HIGH"
       }
     ],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "60-69",
       "sex": "male",
@@ -695,6 +829,10 @@
     "clinical_timeline": [
       "Routine chronic disease management, no acute changes"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "69-year-old female with type 2 diabetes, hypertension, CKD stage 3, hyperlipidemia, and osteoarthritis presents for comprehensive chronic disease management. Diabetes control is adequate with A1c 7.2% on metformin 1000 mg twice daily. Blood pressure well-controlled at 128/80 mmHg on lisinopril 10 mg daily. LDL at goal (88 mg/dL) on atorvastatin 40 mg daily. Creatinine stable at 1.3 mg/dL, consistent with known CKD stage 3, no interval change. Osteoarthritis of the knees managed with acetaminophen as needed; no NSAIDs given renal function. All conditions stable; continue current regimen and routine monitoring.",
     "reference_summary": "69-year-old female with five stable chronic conditions: diabetes (A1c 7.2%), hypertension (128/80 on lisinopril), CKD stage 3 (creatinine 1.3, stable), hyperlipidemia (LDL at goal on atorvastatin), and osteoarthritis (managed with acetaminophen, NSAIDs avoided given renal function). All conditions stable; continue current regimen.",
     "critical_facts": [
@@ -704,7 +842,9 @@
         "content": "Type 2 diabetes mellitus, A1c 7.2%, adequately controlled",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_007-F002",
@@ -712,7 +852,9 @@
         "content": "Hypertension, well-controlled at 128/80 mmHg",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_007-F003",
@@ -720,7 +862,9 @@
         "content": "Chronic kidney disease stage 3, creatinine stable at 1.3 mg/dL",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_007-F004",
@@ -728,7 +872,9 @@
         "content": "NSAIDs avoided for osteoarthritis given renal function",
         "importance": "critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "non_critical_facts": [
@@ -738,7 +884,9 @@
         "content": "Hyperlipidemia, LDL at goal (88 mg/dL)",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_007-F006",
@@ -746,7 +894,9 @@
         "content": "Osteoarthritis of the knees, managed with acetaminophen",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "medication_facts": [
@@ -757,6 +907,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Metformin",
         "status": "current",
         "dose": "1000 mg twice daily",
@@ -769,6 +921,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Lisinopril",
         "status": "current",
         "dose": "10 mg daily",
@@ -781,6 +935,8 @@
         "importance": "non_critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Atorvastatin",
         "status": "current",
         "dose": "40 mg daily",
@@ -793,6 +949,8 @@
         "importance": "non_critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Acetaminophen",
         "status": "current",
         "dose": "500 mg as needed",
@@ -801,6 +959,7 @@
     ],
     "temporal_facts": [],
     "negations": [],
+    "contradiction_facts": [],
     "expected_risk_flags": [
       {
         "flag_id": "CASE_007-R001",
@@ -808,6 +967,11 @@
         "severity": "MODERATE"
       }
     ],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "65-74",
       "sex": "female",
@@ -853,6 +1017,10 @@
       "Day 4: creatinine improved to 1.6 mg/dL, diuresis resumed at lower dose",
       "Day 5: transitioned to oral furosemide 40 mg twice daily, ready for discharge"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "81-year-old male admitted for acute decompensated heart failure with volume overload, weight 88 kg on admission, BNP 850 pg/mL. Also with known atrial fibrillation on apixaban and type 2 diabetes on insulin glargine. IV furosemide was started with good diuretic response. On hospital day 2, creatinine rose from a baseline of 1.2 mg/dL to a peak of 2.1 mg/dL, felt to represent acute kidney injury related to aggressive diuresis; IV furosemide was held and fluids liberalized. Creatinine improved to 1.6 mg/dL by day 4, at which point diuresis was cautiously resumed at a lower dose. Metoprolol succinate was continued throughout for rate control of atrial fibrillation, uptitrated from 12.5 mg to 25 mg daily as the patient tolerated it hemodynamically. By discharge on day 5, weight had decreased to 82 kg, potassium was 4.2 mEq/L, and the patient was transitioned to oral furosemide 40 mg twice daily. Discharge medications: furosemide 40 mg twice daily, metoprolol succinate 25 mg daily, apixaban 5 mg twice daily (unchanged throughout admission), insulin glargine 20 units nightly. Follow-up with cardiology in one week including basic metabolic panel to reassess renal function and potassium.",
     "reference_summary": "81-year-old male admitted for decompensated heart failure (88 to 82 kg with diuresis, BNP 850). Course complicated by AKI (creatinine 1.2 to 2.1 peak) attributed to diuresis, which resolved to 1.6 with a brief hold and fluid liberalization before diuresis cautiously resumed. Metoprolol uptitrated from 12.5 to 25 mg daily for AFib rate control; apixaban unchanged throughout. Discharged on furosemide 40 mg twice daily, metoprolol succinate 25 mg daily, apixaban 5 mg twice daily, and insulin glargine 20 units nightly, with cardiology follow-up and repeat labs in one week.",
     "critical_facts": [
@@ -862,7 +1030,9 @@
         "content": "Creatinine rose from a baseline of 1.2 mg/dL to a peak of 2.1 mg/dL (acute kidney injury attributed to diuresis)",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_008-F002",
@@ -870,7 +1040,9 @@
         "content": "Creatinine improved to 1.6 mg/dL by discharge after IV furosemide was held and fluids liberalized",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_008-F003",
@@ -878,7 +1050,9 @@
         "content": "Weight decreased from 88 kg on admission to 82 kg at discharge with diuresis",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_008-F004",
@@ -886,7 +1060,9 @@
         "content": "Apixaban dose unchanged throughout admission",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "non_critical_facts": [
@@ -896,7 +1072,9 @@
         "content": "Cardiology follow-up in one week with repeat basic metabolic panel",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "medication_facts": [
@@ -907,6 +1085,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Furosemide",
         "status": "changed_dose",
         "dose": "40 mg twice daily (oral, at discharge)",
@@ -919,6 +1099,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Metoprolol succinate",
         "status": "changed_dose",
         "dose": "25 mg daily (increased from 12.5 mg)",
@@ -931,6 +1113,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Apixaban",
         "status": "current",
         "dose": "5 mg twice daily",
@@ -943,6 +1127,8 @@
         "importance": "non_critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "drug_name": "Insulin glargine",
         "status": "current",
         "dose": "20 units nightly",
@@ -957,6 +1143,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "earlier_value": "1.2 mg/dL",
         "later_value": "2.1 mg/dL peak, 1.6 mg/dL at discharge",
         "unit": "mg/dL",
@@ -969,6 +1157,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "earlier_value": "88 kg",
         "later_value": "82 kg",
         "unit": "kg",
@@ -981,6 +1171,8 @@
         "importance": "critical",
         "polarity": "affirmed",
         "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null,
         "earlier_value": "12.5 mg daily",
         "later_value": "25 mg daily",
         "unit": "mg/day",
@@ -988,6 +1180,7 @@
       }
     ],
     "negations": [],
+    "contradiction_facts": [],
     "expected_risk_flags": [
       {
         "flag_id": "CASE_008-R001",
@@ -1000,6 +1193,11 @@
         "severity": "HIGH"
       }
     ],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "75-84",
       "sex": "male",
@@ -1025,6 +1223,10 @@
       "10:00 AM triage note: patient denies chest pain",
       "11:30 AM physician reassessment: patient now reports intermittent chest pain since this morning"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "10:00 AM triage note: 54-year-old female presents with fatigue. Patient denies chest pain, denies shortness of breath. Vitals stable.\n\n11:30 AM physician reassessment: On further questioning, patient now reports intermittent chest pain since this morning, described as pressure-like, radiating to the left arm, associated with mild shortness of breath. This is a change from the initial triage assessment. EKG and troponin ordered emergently given this updated history. The 10:00 AM triage note's denial of chest pain is superseded by this reassessment and should not be treated as the current clinical picture.",
     "reference_summary": "54-year-old female initially denied chest pain at triage, but on physician reassessment 90 minutes later reported intermittent pressure-like chest pain radiating to the left arm with mild shortness of breath, since this morning. The later history supersedes the initial denial; EKG and troponin ordered emergently.",
     "critical_facts": [
@@ -1036,7 +1238,9 @@
         "polarity": "affirmed",
         "attributes": {
           "superseded_fact": "No chest pain reported at 10:00 AM triage"
-        }
+        },
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_009-F002",
@@ -1044,7 +1248,9 @@
         "content": "EKG and troponin ordered emergently given the updated chest pain history",
         "importance": "critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "non_critical_facts": [],
@@ -1059,9 +1265,12 @@
         "polarity": "negated",
         "attributes": {
           "superseded_by": "CASE_009-F001"
-        }
+        },
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
+    "contradiction_facts": [],
     "expected_risk_flags": [
       {
         "flag_id": "CASE_009-R001",
@@ -1069,6 +1278,11 @@
         "severity": "CRITICAL"
       }
     ],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "50-59",
       "sex": "female",
@@ -1101,6 +1315,10 @@
     "clinical_timeline": [
       "Routine annual well-child visit"
     ],
+    "diagnoses": [],
+    "clinical_findings": [],
+    "relevant_negative_findings": [],
+    "follow_up": [],
     "clinical_note": "10-year-old male presents for routine well-child visit. Growth parameters (height and weight) tracking along the established curve at the 60th percentile. Development is age-appropriate; no concerns raised by parent or child. Immunizations are up to date per current schedule. No known drug allergies. Physical exam unremarkable. Vision and hearing screens passed. Anticipatory guidance provided on nutrition, physical activity, and screen time. Return for next well-child visit in one year.",
     "reference_summary": "10-year-old male, routine well-child visit. Growth and development are age-appropriate (60th percentile), immunizations up to date, exam and screens unremarkable. Anticipatory guidance given; follow up in one year.",
     "critical_facts": [],
@@ -1111,7 +1329,9 @@
         "content": "Growth parameters tracking along established curve at 60th percentile",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_010-F002",
@@ -1119,7 +1339,9 @@
         "content": "Development is age-appropriate",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       },
       {
         "fact_id": "CASE_010-F003",
@@ -1127,7 +1349,9 @@
         "content": "Immunizations up to date per current schedule",
         "importance": "non_critical",
         "polarity": "affirmed",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
     "medication_facts": [],
@@ -1139,10 +1363,18 @@
         "content": "No known drug allergies",
         "importance": "non_critical",
         "polarity": "negated",
-        "attributes": {}
+        "attributes": {},
+        "source_ref": null,
+        "criticality_rule": null
       }
     ],
+    "contradiction_facts": [],
     "expected_risk_flags": [],
+    "structured_case": null,
+    "difficulty": null,
+    "categories": [],
+    "expected_failure_opportunities": [],
+    "generation_metadata": {},
     "subgroup": {
       "age_group": "8-12",
       "sex": "male",

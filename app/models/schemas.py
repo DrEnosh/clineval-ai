@@ -19,15 +19,18 @@ from pydantic import BaseModel, Field, field_validator
 from app.core.enums import (
     CaseType,
     DataProvenance,
+    DifficultyTier,
     FactImportance,
     FactPolarity,
     FactType,
+    FailureModeCategory,
     FailureType,
     MedicationStatus,
     RiskLevel,
     Severity,
     TemporalTrend,
 )
+from app.models.structured import FailureOpportunity, StructuredCase
 
 
 def _utcnow() -> datetime:
@@ -53,6 +56,14 @@ class ClinicalFact(BaseModel):
     importance: FactImportance
     polarity: FactPolarity = FactPolarity.AFFIRMED
     attributes: dict[str, Any] = Field(default_factory=dict)
+
+    # Phase 2 traceability. `source_ref` is the `entity_id` of the structured
+    # element this fact was derived from, and `criticality_rule` is the id of
+    # the rule that assigned its importance (see app/benchmark/criticality.py).
+    # Both are None on the hand-authored Phase 1 seed cases, which predate the
+    # structured-case pipeline.
+    source_ref: str | None = None
+    criticality_rule: str | None = None
 
 
 class MedicationFact(ClinicalFact):
@@ -119,6 +130,10 @@ class BenchmarkCase(BaseModel):
     laboratory_values: list[str] = Field(default_factory=list)
     vital_signs: list[str] = Field(default_factory=list)
     clinical_timeline: list[str] = Field(default_factory=list)
+    diagnoses: list[str] = Field(default_factory=list)
+    clinical_findings: list[str] = Field(default_factory=list)
+    relevant_negative_findings: list[str] = Field(default_factory=list)
+    follow_up: list[str] = Field(default_factory=list)
 
     # Free text
     clinical_note: str
@@ -130,7 +145,18 @@ class BenchmarkCase(BaseModel):
     medication_facts: list[MedicationFact] = Field(default_factory=list)
     temporal_facts: list[TemporalFact] = Field(default_factory=list)
     negations: list[ClinicalFact] = Field(default_factory=list)
+    contradiction_facts: list[ClinicalFact] = Field(default_factory=list)
     expected_risk_flags: list[RiskFlag] = Field(default_factory=list)
+
+    # Phase 2 generation layer. `structured_case` is the source of truth this
+    # case was derived from - note, reference summary, and every annotation
+    # above are three independent renderings of it. None on the hand-authored
+    # Phase 1 seed cases, which were written before this pipeline existed.
+    structured_case: StructuredCase | None = None
+    difficulty: DifficultyTier | None = None
+    categories: list[FailureModeCategory] = Field(default_factory=list)
+    expected_failure_opportunities: list[FailureOpportunity] = Field(default_factory=list)
+    generation_metadata: dict[str, Any] = Field(default_factory=dict)
 
     # Subgroup dimensions for benchmark-level subgroup analysis.
     # NOTE: subgroup results describe the benchmark only and must not be

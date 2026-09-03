@@ -1,0 +1,79 @@
+# Benchmark generation configuration.
+#
+# These values are the generator's defaults made explicit and editable. Every
+# key here is optional - deleting this file falls back to identical built-in
+# defaults in app/core/benchmark_config.py. CLI flags override this file.
+#
+# Changing anything here changes what a given seed produces, so treat an edit
+# as a new benchmark version rather than a tweak to an existing one.
+
+benchmark:
+  version: clineval-benchmark-v0.1
+  default_case_count: 100
+  default_seed: 42
+
+  # Relative weights, normalized before allocation. Cases are allocated by
+  # largest remainder, so the realized mix matches these exactly rather than
+  # only on average.
+  difficulty_distribution:
+    EASY: 0.20
+    MODERATE: 0.35
+    HARD: 0.30
+    ADVERSARIAL: 0.15
+
+  # Per tier: how many optional features to draw, which categories are always
+  # applied, and the pool the rest are drawn from without replacement.
+  tiers:
+    EASY:
+      feature_count: [1, 2]
+      pool:
+        - straightforward
+        - short_note
+        - relevant_negative_findings
+        - procedures_and_followup
+
+    MODERATE:
+      feature_count: [2, 4]
+      pool:
+        - abnormal_labs
+        - abnormal_vitals
+        - medication_change
+        - temporal_progression
+        - negation
+        - relevant_negative_findings
+        - procedures_and_followup
+        - multiple_comorbidities
+
+    HARD:
+      feature_count: [4, 6]
+      guaranteed:
+        - high_complexity
+      pool:
+        - multiple_comorbidities
+        - abnormal_labs
+        - abnormal_vitals
+        - temporal_progression
+        - medication_change
+        - medication_dose_change
+        - medication_discontinuation
+        - negation
+        - long_note
+        - procedures_and_followup
+        - historical_vs_current
+
+    ADVERSARIAL:
+      feature_count: [4, 7]
+      guaranteed:
+        - combined_critical
+      pool:
+        - critical_omission
+        - hallucination_opportunity
+        - negation
+        - conflicting_information
+        - historical_vs_current
+        - duplicate_documentation
+        - medication_discontinuation
+        - medication_dose_change
+        - temporal_progression
+        - long_note
+        - abnormal_labs

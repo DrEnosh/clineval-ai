@@ -1,0 +1,72 @@
+{
+  "benchmark_version": "clineval-benchmark-v0.1",
+  "generator_version": "0.2.0",
+  "generated_at": "2026-09-03T19:57:06.160806+00:00",
+  "seed": 42,
+  "case_count": 100,
+  "provenance": "synthetic_template",
+  "contains_real_patient_data": false,
+  "distribution": {
+    "by_difficulty": {
+      "ADVERSARIAL": 15,
+      "EASY": 20,
+      "HARD": 30,
+      "MODERATE": 35
+    },
+    "by_category": {
+      "abnormal_labs": 28,
+      "abnormal_vitals": 27,
+      "combined_critical": 15,
+      "conflicting_information": 11,
+      "critical_omission": 8,
+      "duplicate_documentation": 10,
+      "hallucination_opportunity": 6,
+      "high_complexity": 30,
+      "historical_vs_current": 21,
+      "long_note": 23,
+      "medication_change": 20,
+      "medication_discontinuation": 20,
+      "medication_dose_change": 21,
+      "multiple_comorbidities": 27,
+      "negation": 34,
+      "procedures_and_followup": 40,
+      "relevant_negative_findings": 15,
+      "short_note": 8,
+      "straightforward": 5,
+      "temporal_progression": 44
+    },
+    "by_dominant_case_type": {
+      "conflicting_information": 11,
+      "critical_omission": 2,
+      "high_complexity": 32,
+      "medication": 9,
+      "multi_morbidity": 3,
+      "negation": 9,
+      "normal": 23,
+      "temporal": 11
+    }
+  },
+  "counts": {
+    "critical_facts": 322,
+    "medication_facts": 261,
+    "temporal_facts": 119,
+    "negation_facts": 176,
+    "contradiction_facts": 11,
+    "expected_risk_flags": 319,
+    "failure_opportunities": 376,
+    "total_annotated_facts": 1565
+  },
+  "cases_containing": {
+    "negation": 64,
+    "medication_change": 53,
+    "temporal_trend": 65,
+    "critical_facts": 100,
+    "deliberate_failure_opportunity": 79,
+    "high_complexity": 30
+  },
+  "averages": {
+    "note_characters": 1221.8,
+    "summary_characters": 465.0,
+    "facts_per_case": 15.65
+  }
+}

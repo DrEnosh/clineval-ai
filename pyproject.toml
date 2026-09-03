@@ -10,6 +10,7 @@ dependencies = [
     "pydantic-settings>=2.2",
     "fastapi>=0.110",
     "uvicorn[standard]>=0.29",
+    "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]

@@ -50,16 +50,22 @@ Every score the platform reports traces back to records like this one.
 
 ## Status
 
-**Phase 1 of 13 is complete.** The foundation runs end to end: schemas,
-evaluator contract, a validated 10-case synthetic benchmark, a live API, and 67
-passing tests. The evaluator *implementations* are Phase 4–5 and are not written
-yet — the interfaces are defined, deliberately, before anything depends on them.
+**Phases 1–2 of 13 are complete.** The foundation and the benchmark are done:
+schemas, the evaluator contract, a reproducible 100-case synthetic benchmark
+built ground-truth-first, a twelve-check integrity validator, a live API, and
+276 passing tests at 99% coverage.
+
+The evaluator *implementations* are Phases 4–5 and are not written yet — the
+interfaces are defined, deliberately, before anything depends on them. **No
+model has been evaluated, and no evaluation results exist anywhere in this
+repository.**
 
 | | |
 |---|---|
-| ✅ Repository, architecture, data schemas | ✅ 10 synthetic benchmark cases |
-| ✅ Evaluation interfaces | ✅ 67 passing tests |
-| ✅ Minimal runnable API | ⬜ Evaluators, scoring, DB, dashboard, reports |
+| ✅ Repository, architecture, data schemas | ✅ 100-case generated benchmark + 10 curated cases |
+| ✅ Evaluation interfaces | ✅ Integrity audit with CI-gating exit code |
+| ✅ Minimal runnable API | ✅ 276 passing tests, 99% coverage |
+| ⬜ Evaluators, scoring, DB, dashboard, reports | |
 
 See the [phase plan](docs/ARCHITECTURE.md#11-phase-plan) for what lands when.
 
@@ -92,30 +98,80 @@ Full detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## The benchmark
 
-Ten hand-authored synthetic cases, one per stress-test dimension:
+100 generated cases across 20 failure modes and 4 difficulty tiers, plus 10
+hand-authored curated cases. Full methodology in
+[docs/BENCHMARK.md](docs/BENCHMARK.md).
 
-| Case | Type | What it exercises |
+### Ground truth comes first
+
+The structured case is the source of truth. The note, the reference summary,
+and the annotations are three **independent** renderings of it:
+
+```
+                    StructuredCase
+                  (source of truth)
+                          │
+          ┌───────────────┼───────────────┐
+          ▼               ▼               ▼
+    source note    reference summary   annotations
+```
+
+Nothing is written first and back-annotated. Two things follow:
+
+- **The note and annotations cannot disagree** — neither was written against
+  the other, so the mismatch hand annotation is prone to is structurally
+  impossible.
+- **The summary tests retention, not paraphrase** — generated from structure
+  rather than from the note, so a model cannot score well by copying sentences.
+
+### Difficulty tiers
+
+| Tier | Share | Definition |
 |---|---|---|
-| CASE_001 | normal | Baseline, no expected risk flags |
-| CASE_002 | critical omission | Creatinine 1.4 → 1.9 mg/dL; eGFR 52 → 38 |
-| CASE_003 | hallucination | What must *not* be invented (pneumonia; antibiotics despite penicillin allergy) |
-| CASE_004 | negation | Four critical negated diagnoses |
-| CASE_005 | temporal | Prior vs. current furosemide dose; weight trend |
-| CASE_006 | medication | All five medication statuses in one case |
-| CASE_007 | multi-morbidity | Five conditions, four medications |
-| CASE_008 | high complexity | 5-day admission; AKI that rises then resolves |
-| CASE_009 | conflicting info | Later assessment supersedes earlier triage note |
-| CASE_010 | subgroup | Pediatric case for subgroup coverage |
+| **EASY** | 20% | Few facts, no traps — clean documentation of one problem |
+| **MODERATE** | 35% | Several interacting facts: medications, labs, a temporal element |
+| **HARD** | 30% | Interacting conditions and medications, a multi-day course, negations, abnormal values |
+| **ADVERSARIAL** | 15% | Built to expose known LLM failures; always combines a negation, a temporal trap, and a medication trap |
 
-Every case carries a structured gold-standard layer — critical facts,
-medication facts (with drug, dose, status), temporal facts (with earlier value,
-later value, trend), negations, and expected risk flags.
+The mix is exact, not probabilistic — largest-remainder allocation means a
+100-case run contains exactly 20 easy and 15 adversarial cases.
 
-The benchmark's own integrity is tested: fact ids unique and namespaced,
-importance labels correct, negations actually negated, and every annotated drug
-name and temporal value grounded in the note text. **These tests caught two real
-annotation bugs during Phase 1** — a fact mislabeled critical, and a medication
-annotated but never mentioned in its note.
+### Reproducible
+
+```bash
+python -m scripts.generate_benchmark --cases 100 --seed 42
+```
+
+The same seed and case count produce byte-identical output, across processes
+and machines. No LLM is involved anywhere in generation — ground truth produced
+by a language model would be no more trustworthy than that model.
+
+### Criticality is rule-based, not inferred
+
+Ten enumerated rules (CR-01 … CR-10) assign importance, and every critical fact
+records the id of the rule that marked it. "Why is this fact critical?" always
+has a stated answer — a panic-range lab is CR-01, a major medication change is
+CR-04, a reversed critical negative is CR-08. These are documented as
+**benchmark design labels, not clinical standards**.
+
+### Its integrity is machine-checked
+
+Twelve checks verify every annotation traces to real structured content, that
+the three renderings agree, that the summary invents nothing, and that no
+identifiable information exists anywhere:
+
+```bash
+python -m scripts.audit_benchmark
+```
+
+Exits non-zero on any failure, so it gates CI. Each check is *proven to fire* —
+the test suite corrupts a case in the specific way each check targets and
+asserts it is caught, because a validator that never fails is worth nothing.
+
+**These checks caught four real defects during development**: a fact mislabeled
+critical, a medication annotated but absent from its note, two conflicting
+sodium values at the same timepoint, and `.capitalize()` silently corrupting
+"GERD" into "gerd".
 
 ## Installation
 
@@ -144,10 +200,28 @@ cp .env.example .env
 
 ## Running
 
-**Generate the benchmark** (writes `data/synthetic/benchmark_v1.json`):
+**Generate the benchmark** (writes `data/synthetic/clineval-benchmark-v0.1/`):
 
 ```bash
-.venv/Scripts/python.exe scripts/generate_benchmark.py
+.venv/Scripts/python.exe -m scripts.generate_benchmark --cases 100 --seed 42
+```
+
+**Audit the benchmark** (exits non-zero if any integrity check fails):
+
+```bash
+.venv/Scripts/python.exe -m scripts.audit_benchmark
+```
+
+**Generate a targeted subset:**
+
+```bash
+.venv/Scripts/python.exe -m scripts.generate_benchmark --cases 40 --seed 7 --difficulty ADVERSARIAL
+```
+
+**Regenerate the curated 10-case seed set:**
+
+```bash
+.venv/Scripts/python.exe -m scripts.generate_benchmark --curated
 ```
 
 **Run the API:**
@@ -212,9 +286,13 @@ standard.
 
 ## Dataset provenance
 
-All data here is synthetic and hand-authored, labeled `MANUAL_SYNTHETIC` on
-every case. No real or de-identified patient data is used, required, or
-committed. Restricted datasets such as MIMIC-IV-Note are **never** downloaded or
+All data here is synthetic. No real or de-identified patient data is used,
+required, or committed, and **no generative model is involved in producing any
+case** — notes, summaries, and annotations all come from deterministic renderers
+reading a structured object. Timing is always relative ("3 months ago"), never
+a calendar date; patient ids are synthetic surrogates.
+
+Restricted datasets such as MIMIC-IV-Note are **never** downloaded or
 redistributed by this project; the architecture merely allows a credentialed
 user to evaluate one locally under their own data use agreement. Full detail:
 [data/README.md](data/README.md).
@@ -231,18 +309,28 @@ offline, gated by a single `settings.is_llm_configured` check.
 Stated plainly, because a project about honest evaluation should be honest about
 itself:
 
-- **The benchmark is synthetic and small.** Ten cases exercise ten failure modes;
-  they do not represent the distribution of real clinical documentation.
-- **Evaluator implementations do not exist yet.** Phase 1 ships the contract and
-  the benchmark. No model has been evaluated, and no evaluation numbers appear
-  anywhere in this repository.
+- **The benchmark is synthetic, and structurally so.** Cases are composed from a
+  curated library of 18 conditions and 31 medications. Real notes are messier,
+  longer, more elliptical, and full of documentation patterns this generator
+  does not model.
+- **Template phrasing repeats.** Sentence structures recur across cases, so a
+  model could learn surface regularities that would not transfer to real
+  documentation.
+- **Coverage is not representativeness.** 20 failure modes across 100 cases
+  exercise 20 failure modes. They do not represent the distribution of real
+  clinical documentation or of real summarization errors.
+- **Criticality rules are benchmark judgments.** CR-01 … CR-10 are defensible
+  but not validated against any external standard.
+- **No clinician review.** Clinical content is plausible, not authoritative, and
+  has not been reviewed by a licensed clinician.
+- **Evaluator implementations do not exist yet.** Phases 1–2 ship the contract
+  and the benchmark. No model has been evaluated, and no evaluation numbers
+  appear anywhere in this repository.
 - **Subgroup analysis is benchmark-level only.** Subgroup results describe this
   synthetic benchmark. They are **not** evidence about real-world population
   fairness and must never be presented as such.
 - **The risk classification is a portfolio framework**, not a validated
   instrument, and carries no regulatory meaning.
-- **Clinical content is plausible, not authoritative.** It was written to
-  exercise an evaluator, not to serve as medical reference material.
 - **Passing this benchmark would not make a system safe for clinical use.** No
   result produced here can support that claim.
 
