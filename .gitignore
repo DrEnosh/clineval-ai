@@ -1,0 +1,35 @@
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Databases (local runtime state - never commit real data)
+*.db
+*.sqlite3
+
+# Generated reports (runtime output, not source)
+reports/generated/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Do NOT ignore data/synthetic/ - that data is meant to be committed.
