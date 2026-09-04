@@ -223,26 +223,38 @@ NEGATION_TERMINATORS: tuple[str, ...] = (
     "reports", "complains", "endorses", "positive for", "presents with", "with",
 )
 
+# Cue lists for inferring how model output frames a medication.
+#
+# Widened in Phase 5 after real-register challenges showed the original lists
+# were too narrow for natural clinical phrasing: "has been held", "stepped up",
+# and "is no longer being taken" all went undetected and were reported as
+# status errors against summaries that stated the status perfectly clearly.
+# The lists are matched as substrings within the drug's own sentence, so
+# shorter general cues ("no longer", "step up") cover a family of phrasings.
 MEDICATION_STATUS_CUES: dict[str, tuple[str, ...]] = {
     "discontinued": (
-        "discontinued", "stopped", "held", "ceased", "no longer taking", "no longer on",
-        "d/c", "dc'd", "taken off", "came off", "withdrawn",
+        "discontinued", "discontinue", "stopped", "stopping", "held", "holding",
+        "withheld", "ceased", "cessation", "no longer", "d/c", "dc'd",
+        "taken off", "came off", "withdrawn", "omitted", "suspended",
     ),
     "new": (
-        "newly started", "started", "initiated", "commenced", "new prescription",
-        "newly prescribed", "begun", "added",
+        "newly started", "started", "starting", "initiated", "initiation",
+        "commenced", "new prescription", "newly prescribed", "begun", "added",
     ),
     "changed_dose": (
-        "increased", "decreased", "titrated", "uptitrated", "adjusted", "reduced",
-        "raised", "lowered", "changed from", "dose change",
+        "increased", "decreased", "titrated", "uptitrated", "up titrated",
+        "adjusted", "reduced", "raised", "lowered", "changed from", "dose change",
+        "stepped up", "stepped down", "step up", "step down", "escalated",
+        "de-escalated", "doubled", "halved",
     ),
     "historical": (
         "in the past", "previously", "historical", "former", "prior medication",
         "used to take", "not a current", "past medication", "no longer a current",
+        "no longer part of", "not part of the current",
     ),
     "current": (
-        "continued", "continues", "current", "ongoing", "maintained", "remains on",
-        "stable on", "taking",
+        "continued", "continues", "continuing", "current", "ongoing", "maintained",
+        "remains on", "remaining on", "stable on", "taking", "takes", "on ",
     ),
 }
 

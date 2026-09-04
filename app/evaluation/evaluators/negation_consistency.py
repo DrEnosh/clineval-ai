@@ -31,7 +31,7 @@ class NegationConsistencyEvaluator(DeterministicEvaluator):
     """Checks that negated facts stay negated."""
 
     name = "negation_consistency"
-    version = "0.3.0"
+    version = "0.5.0"
 
     def evaluate(self, case: BenchmarkCase, ai_output: AIOutput) -> EvaluatorResult:
         negations = case.negations

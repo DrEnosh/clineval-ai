@@ -49,7 +49,7 @@ class TemporalConsistencyEvaluator(DeterministicEvaluator):
     """Checks trends, historical/current framing, and conflict resolution."""
 
     name = "temporal_consistency"
-    version = "0.3.0"
+    version = "0.5.0"
 
     def evaluate(self, case: BenchmarkCase, ai_output: AIOutput) -> EvaluatorResult:
         structured = case.structured_case

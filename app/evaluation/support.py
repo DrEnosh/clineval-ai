@@ -655,15 +655,29 @@ _TREND_WORDS: dict[TemporalTrend, tuple[str, ...]] = {
 _ENDPOINT_LINK_DISTANCE = 40
 
 
-def _standalone_positions(sentence: str, value: str) -> list[tuple[int, int]]:
-    """Spans where `value` appears as a whole numeric token.
+_NUMBER_TOKEN = re.compile(r"(?<![\d.])\d+(?:\.\d+)?(?![\d.])")
 
-    Token-bounded so that looking for "2" does not match inside "3.1" or
-    "1.73m2" - though it does still match a genuine standalone "2" such as the
-    one in "hospital day 2", which is why linkage distance is also required.
+
+def _standalone_positions(sentence: str, value: float) -> list[tuple[int, int]]:
+    """Spans of whole numeric tokens whose *value* equals `value`.
+
+    Compares numerically rather than by string, so "1.90" matches 1.9 and "25"
+    matches 25.0. String comparison here reported a correctly-written trend as
+    information loss whenever a model padded a decimal - a real false positive
+    found by the Phase 5 numeric-forms challenge.
+
+    Still token-bounded, so looking for 2 does not match inside "3.1" or
+    "1.73m2" - though it does match a genuine standalone "2" such as the one in
+    "hospital day 2", which is why linkage distance is also required.
     """
-    pattern = re.compile(rf"(?<![\d.]){re.escape(value)}(?![\d.])")
-    return [(match.start(), match.end()) for match in pattern.finditer(sentence)]
+    spans: list[tuple[int, int]] = []
+    for match in _NUMBER_TOKEN.finditer(sentence):
+        try:
+            if float(match.group(0)) == value:
+                spans.append((match.start(), match.end()))
+        except ValueError:  # pragma: no cover - regex guarantees a number
+            continue
+    return spans
 
 
 def _linked_endpoint_sentence(output: str, entity: LabTrendEntry) -> str | None:
@@ -682,12 +696,9 @@ def _linked_endpoint_sentence(output: str, entity: LabTrendEntry) -> str | None:
     Returning None means the output states no single-statement trend for this
     entity, which is information loss - not a reversal.
     """
-    earlier = entity.format_value(entity.earlier_value)
-    later = entity.format_value(entity.later_value)
-
     for sentence in sentences_containing(entity.lab_name, output):
-        earlier_spans = _standalone_positions(sentence, earlier)
-        later_spans = _standalone_positions(sentence, later)
+        earlier_spans = _standalone_positions(sentence, entity.earlier_value)
+        later_spans = _standalone_positions(sentence, entity.later_value)
         for earlier_start, earlier_end in earlier_spans:
             for later_start, later_end in later_spans:
                 # Either order counts as one statement: "rose from 1.4 to 1.9"

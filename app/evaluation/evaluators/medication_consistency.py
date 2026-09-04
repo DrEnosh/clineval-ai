@@ -27,7 +27,7 @@ class MedicationConsistencyEvaluator(DeterministicEvaluator):
     """Checks drug presence, status, and dose against the structured list."""
 
     name = "medication_consistency"
-    version = "0.3.0"
+    version = "0.5.0"
 
     def evaluate(self, case: BenchmarkCase, ai_output: AIOutput) -> EvaluatorResult:
         structured = case.structured_case

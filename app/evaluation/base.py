@@ -29,7 +29,7 @@ from app.core.enums import FindingType
 from app.evaluation.matching import FactMatcher
 from app.models.schemas import AIOutput, BenchmarkCase, EvaluationFinding, MetricValue
 
-EVALUATION_VERSION = "0.3.0"
+EVALUATION_VERSION = "0.5.0"
 
 
 class EvaluatorResult(BaseModel):

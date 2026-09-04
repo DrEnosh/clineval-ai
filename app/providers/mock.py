@@ -211,7 +211,7 @@ def _abstractive(case) -> str:
         replacement = f"{worse if concerning else better} since the previous measurement."
 
         pattern = re.compile(
-            rf"{re.escape(trend.lab_name)}\s+(?:rose|fell|remained stable|changed)[^.]*\.",
+            rf"{re.escape(trend.lab_name)}\s+(?:rose|fell|remained stable|changed).*?\.(?=\s|$)",
             re.IGNORECASE,
         )
         summary = pattern.sub(replacement, summary, count=1)

@@ -42,7 +42,7 @@ class FactSupportEvaluator(DeterministicEvaluator):
     """Generic support analysis across every structured entity type."""
 
     name = "fact_support"
-    version = "0.3.0"
+    version = "0.5.0"
 
     def evaluate(self, case: BenchmarkCase, ai_output: AIOutput) -> EvaluatorResult:
         structured = case.structured_case
@@ -169,16 +169,25 @@ class FactSupportEvaluator(DeterministicEvaluator):
     ) -> tuple[int, int, int]:
         """Flag numeric values in the output that the source never states.
 
+        Compares **numerically**, not by string: "12.50" is the value 12.5, and
+        a model that pads a decimal has not fabricated anything. String
+        containment here reported correctly-written values as hallucinations
+        whenever notation differed - a false positive found by the Phase 5
+        numeric-forms challenge.
+
         Small integers common in prose ("2 weeks", "3 months") are excluded -
         flagging them would bury real value fabrications in noise.
         """
+        supported_values = {
+            float(token) for token in _NUMBER.findall(corpus)
+        }
         unsupported = 0
         asserted = 0
         for token in sorted(set(_NUMBER.findall(output))):
             if token in _INNOCUOUS_NUMBERS:
                 continue
             asserted += 1
-            if token in corpus:
+            if float(token) in supported_values:
                 continue
             unsupported += 1
             result.findings.append(

@@ -50,17 +50,19 @@ Every score the platform reports traces back to records like this one.
 
 ## Status
 
-**Phases 1–4 of 13 are complete.** The benchmark, the deterministic evaluation
-engine, and the model-generation and LLM-adjudication layers are done: a
-reproducible 100-case benchmark built ground-truth-first, five evidence-backed
-evaluators, self-validation by controlled failure injection, a provider
-abstraction with four backends plus an offline mock, versioned prompts,
-deterministic-first LLM adjudication, and 931 passing tests at 98% coverage.
+**Phases 1–5 of 13 are complete**, with one part of Phase 5 blocked. The
+benchmark, the deterministic evaluation engine, the model-generation and
+LLM-adjudication layers, and the experimental validation apparatus are done.
 
-**No real model has been evaluated.** Every generation so far comes from the
-deterministic mock provider and is labelled `is_real_model_output: false`. The
-pipeline is ready for a configured provider; running one is the user's choice
-and requires an explicit credential.
+**No real model has been evaluated** — this environment has no provider
+credential, so the real-model half of Phase 5 is pending rather than done. The
+experiment is built and pre-registered, and `run_experiment` **refuses to
+substitute a mock** for a real provider rather than produce a result that could
+be mistaken for one. Set `CLINEVAL_ANTHROPIC_API_KEY` (or OpenAI/Google) and it
+runs unchanged.
+
+The methodology validation that needed no model was completed, and it found and
+fixed **four real defects** — see [CHANGELOG.md](CHANGELOG.md).
 
 | | |
 |---|---|
@@ -68,8 +70,9 @@ and requires an explicit credential.
 | ✅ Five deterministic evaluators | ✅ Versioned prompts, structured JSON judgments |
 | ✅ Evidence-backed findings, configurable severity | ✅ Deterministic-first adjudication with explicit disagreement |
 | ✅ Self-validation: 0 false positives, 9/9 injections detected | ✅ Output caching, cost/token/latency tracking |
-| ✅ Minimal runnable API | ✅ 931 passing tests, 98% coverage, no network in CI |
-| ⬜ Risk scoring, DB, dashboard, model comparison, reports | |
+| ✅ Minimal runnable API | ✅ Methodology challenge suite: 56/56 after fixes |
+| ✅ Blind-vs-informed adjudication apparatus | ✅ 1012 passing tests, 98% coverage, no network in CI |
+| ⏸ Real-model results (needs a credential) | ⬜ Risk scoring, DB, dashboard, reports |
 
 See the [phase plan](docs/ARCHITECTURE.md#11-phase-plan) for what lands when.
 
@@ -253,6 +256,19 @@ the semantic ambiguity adjudication exists for):
 
 ```bash
 .venv/Scripts/python.exe -m scripts.evaluate_benchmark --cases 10 --behaviour abstractive --adjudicate
+```
+
+**Run the Phase 5 experiment** (refuses to fake a real model; use `mock:` to
+exercise the apparatus offline):
+
+```bash
+.venv/Scripts/python.exe -m scripts.run_experiment --models mock:demo --behaviour abstractive --adjudicate
+```
+
+**Analyze stored experiment artifacts:**
+
+```bash
+.venv/Scripts/python.exe -m scripts.analyze_runs
 ```
 
 **Generate adversarial prompt-injection cases** (opt-in, not in the default mix):

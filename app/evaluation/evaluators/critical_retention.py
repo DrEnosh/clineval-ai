@@ -23,7 +23,7 @@ class CriticalRetentionEvaluator(DeterministicEvaluator):
     """Measures retention of critical facts, with per-fact evidence."""
 
     name = "critical_retention"
-    version = "0.3.0"
+    version = "0.5.0"
 
     def evaluate(self, case: BenchmarkCase, ai_output: AIOutput) -> EvaluatorResult:
         empty = self.guard_output(case, ai_output)
