@@ -1,0 +1,66 @@
+# Evaluation configuration.
+#
+# These values are the evaluator's defaults made explicit and editable.
+# Deleting this file falls back to identical built-in defaults in
+# app/evaluation/severity.py.
+#
+# Severity is configuration, not code, because it is the most contestable
+# judgment in the system: an institution deploying this would reasonably set
+# different thresholds. Changing anything here changes how results are
+# classified, so treat an edit as a new evaluation configuration rather than
+# a tweak - the active policy is recorded on every EvaluationResult.
+#
+# These are RESEARCH FRAMEWORK labels. They are not clinical severity
+# classifications and carry no regulatory meaning.
+
+severity:
+  # A finding about a fact the benchmark marked critical escalates one step
+  # up the ladder (INFO -> LOW -> MODERATE -> HIGH -> CRITICAL).
+  escalate_for_critical_facts: true
+
+  # A finding about a panic-range value escalates one step.
+  escalate_for_critical_value: true
+
+  # Applied to any finding type not listed below.
+  default_severity: LOW
+
+  base_severities:
+    # Retention. Contradiction sits level with critical omission: silence
+    # loses information, but a contradiction creates false information.
+    critical_omission: HIGH
+    non_critical_omission: LOW
+    contradiction: HIGH
+
+    # Negation. A reversal fabricates a diagnosis the source explicitly
+    # denied; an omission merely drops the negative.
+    negation_reversal: HIGH
+    negation_omission: MODERATE
+
+    # Medication. Status errors rank with dose errors because reporting a
+    # discontinued drug as current risks duplicate or contraindicated therapy.
+    medication_omission: MODERATE
+    medication_hallucination: HIGH
+    medication_status_error: HIGH
+    medication_dose_error: HIGH
+
+    # Temporal. Reporting a stale value as current actively misinforms;
+    # dropping an endpoint only loses context.
+    temporal_information_loss: MODERATE
+    temporal_trend_reversal: HIGH
+    temporal_value_confusion: HIGH
+    historical_current_confusion: MODERATE
+
+    # Values. Rounding is not a clinical error.
+    value_error: MODERATE
+    value_approximation: INFO
+
+    # Support.
+    unsupported_addition: MODERATE
+    conflict_resolution_error: HIGH
+
+    # Operational.
+    empty_output: CRITICAL
+    malformed_output: HIGH
+    missing_annotation: INFO
+    inconsistent_across_runs: MODERATE
+    other: LOW

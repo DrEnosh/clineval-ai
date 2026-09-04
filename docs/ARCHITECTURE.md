@@ -38,8 +38,9 @@ concrete evaluator.
 │  app/reporting/        Evaluation report generation (P10)    │
 │  app/scoring/          Weighted scoring + risk class. (P6)   │
 ├──────────────────────────────────────────────────────────────┤
-│  app/evaluation/       Evaluator interfaces + impls (P4/P5)  │
-│    base.py             ← the contract, defined in Phase 1    │
+│  app/evaluation/       Deterministic evaluation engine (P3)  │
+│    base.py             ← the contract                        │
+│    support.py          ← shared entity analysis engine       │
 ├──────────────────────────────────────────────────────────────┤
 │  app/benchmark/        Synthetic case generation (P2)        │
 │  app/models/schemas.py Shared Pydantic contract  ◄─ everyone │
@@ -54,28 +55,40 @@ concrete evaluator.
 ```
 BenchmarkCase          AIOutput
 (gold standard,        (summary produced by
- authored by hand)      the model under test)
+ derived from           the model under test)
+ structure)
       │                        │
       └──────────┬─────────────┘
                  ▼
-         EvaluationPipeline
+   normalization / negation / numeric / matching
+                 ▼
+        entity support analysis
+                 ▼
+         EvaluationRunner
                  │
     ┌────────────┼────────────┬─────────────┬──────────────┐
     ▼            ▼            ▼             ▼              ▼
-Factuality  CriticalRet.  Hallucination  Negation   Temporal / Medication
+CriticalRet.  Medication   Negation     Temporal      FactSupport
     │            │            │             │              │
     └────────────┴─────┬──────┴─────────────┴──────────────┘
                        ▼
-        list[EvaluationDimensionResult]
-            (score + Failure records)
+         list[EvaluationFinding] + MetricValue
+              (detection only, severity unset)
                        ▼
-                 Scoring layer
-          (weights from configuration)
+                Severity policy
+           (configurable, applied once)
                        ▼
-        EvaluationRun.score + RiskLevel
+                EvaluationResult
+                       ▼
+       Scoring layer → RiskLevel  (Phase 6, not built)
                        ▼
               Report / Dashboard
 ```
+
+Severity assignment sits deliberately *outside* the evaluators. Evaluators
+detect; the runner classifies. Severity is the most contestable judgment in the
+system, so it lives in one configurable place rather than being duplicated
+across five evaluators that could disagree.
 
 ### The one-way rule for ground truth
 
@@ -99,10 +112,17 @@ layer boundary. Redefining a subset of these fields elsewhere is a bug.
 | `BenchmarkCase` | Structured context + note + reference summary + the gold-standard annotation layer |
 | `Model` | A registered AI system under evaluation |
 | `AIOutput` | One generated summary (`run_index` distinguishes repeated generations) |
-| `Failure` | An evidenced finding: type, severity, explanation, evidence, fact id |
-| `CaseResult` | Per-case metrics + failures within a run |
+| `EvaluationFinding` | An evidenced finding: type, explanation, source evidence, output evidence, fact id, evaluator name and version, match level, confidence. `severity` is unset until the policy assigns it |
+| `MetricValue` | A metric with the numerator and denominator it came from; `value` is `None` when undefined |
+| `CaseResult` | Per-case metrics + findings within a run |
 | `EvaluationRun` | Everything needed to reproduce a run |
+| `EvaluationResult` | A complete model-vs-benchmark evaluation |
 | `Report` | Pointer to a generated report artifact |
+
+Phase 3 replaced the Phase 1 `Failure` placeholder with `EvaluationFinding`.
+The old type carried a single `evidence` string and a severity the evaluator
+assigned itself; neither survives contact with the requirement that a finding
+be judgeable without re-reading the case.
 
 ### Why polarity is a first-class field
 
@@ -192,13 +212,18 @@ interpreted after the logic changes.
 
 | Dimension | What it answers | Status |
 |---|---|---|
-| Factuality | Is each gold fact retained / misrepresented / missing / contradicted / newly introduced? | Interface (P1); impl P4 |
-| Critical retention | `critical facts retained ÷ total critical facts` | Interface (P1); impl P4 |
-| Hallucination | What in the output is unsupported by the source? | Interface (P1); impl P5 |
-| Negation | Was a negated fact asserted as affirmed? | Interface (P1); impl P5 |
-| Temporal | Were values, trends, or prior-vs-current confused? | Interface (P1); impl P5 |
-| Medication | Invented / omitted / wrong drug, dose, or status? | Interface (P1); impl P5 |
-| Consistency | Do repeated generations agree? | Interface (P1); impl P4 |
+| Critical retention | Is each critical fact retained / omitted / contradicted? | **Implemented (P3)** |
+| Medication consistency | Invented / omitted / wrong drug, dose, or status? | **Implemented (P3)** |
+| Negation consistency | Was a negated fact asserted as affirmed? | **Implemented (P3)** |
+| Temporal consistency | Were values, trends, or prior-vs-current confused? | **Implemented (P3)** |
+| Fact support | What does the output support, and what does it assert that the source does not? | **Implemented (P3)** |
+| Consistency across runs | Do repeated generations agree? | Contract only; needs a stochastic model (P4) |
+| LLM adjudication | Is a near-miss semantically equivalent? | Contract only (P4) |
+
+All five implemented evaluators share one engine
+(`app/evaluation/support.py`), so a fix to negation scope or numeric comparison
+improves every dimension at once rather than being patched in five places.
+Full methodology in [docs/EVALUATION.md](EVALUATION.md).
 
 **Supplementary metrics.** ROUGE and embedding similarity may be reported, but
 they are supplementary only. Lexical overlap is not clinical correctness, and
@@ -221,8 +246,15 @@ are combined rather than the latter replacing the former.
 | `HIGH` | Clinically important misinformation, contradiction, hallucination, or omission of a critical fact |
 | `CRITICAL` | Potentially dangerous misrepresentation of highly important information (e.g. reversing a negated diagnosis, inventing a contraindicated treatment) |
 
-Severity attaches to the `Failure`, not to the case, because the same case can
-produce failures of different severities from different models.
+Severity attaches to the `EvaluationFinding`, not to the case, because the same
+case can produce findings of different severities from different models.
+
+Severity is assigned by a **configurable policy** (`app/evaluation/severity.py`,
+`config/evaluation.yaml`) applied by the runner *after* detection — never by the
+evaluator that made the finding. A finding about a fact the benchmark marked
+critical escalates one step; so does one about a panic-range value. Low
+confidence does **not** de-escalate: a probable serious error stays serious, and
+confidence is reported separately so a reviewer can weigh it.
 
 ## 7. Scoring and risk classification (Phase 6)
 
@@ -270,7 +302,7 @@ must check. `.env` is gitignored; `.env.example` is committed.
 |---|---|---|
 | 1 | Architecture, schemas, evaluator interfaces, 10-case benchmark, minimal API, tests | **Complete** |
 | 2 | Ground-truth-first benchmark generation, criticality rules, integrity audit | **Complete** |
-| 3 | Extended gold-standard annotation tooling | Pending |
+| 3 | Deterministic evaluation engine, findings, severity, self-validation | **Complete** |
 | 4 | Evaluation engine implementations | Pending |
 | 5 | Failure detection (hallucination, negation, temporal, medication) | Pending |
 | 6 | Scoring and risk framework | Pending |

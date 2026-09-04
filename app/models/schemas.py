@@ -24,7 +24,8 @@ from app.core.enums import (
     FactPolarity,
     FactType,
     FailureModeCategory,
-    FailureType,
+    FindingType,
+    MatchLevel,
     MedicationStatus,
     RiskLevel,
     Severity,
@@ -206,20 +207,60 @@ class AIOutput(BaseModel):
 # ---------------------------------------------------------------------------
 
 
-class Failure(BaseModel):
-    """A single, evidenced, explainable evaluation finding.
+class EvaluationFinding(BaseModel):
+    """A single evidenced, explainable evaluation finding.
 
-    Every score the platform reports must be traceable to `Failure` records
-    like this one rather than presented as a bare number (see docs/ARCHITECTURE.md,
-    "Product philosophy").
+    Every score the platform reports must be traceable to findings like this
+    one rather than presented as a bare number (see docs/ARCHITECTURE.md,
+    "Product philosophy"). The evidence fields are what make that real: a
+    finding records what the source says AND what the output says, so a
+    reviewer can judge the call without re-reading the case.
+
+    `severity` is deliberately optional at construction. Evaluators detect;
+    the severity policy classifies (see app/evaluation/severity.py). A finding
+    reaching a caller with `severity is None` means the policy was never
+    applied, which the runner guarantees against.
     """
 
-    type: FailureType
-    severity: Severity
-    explanation: str
-    evidence: str
+    finding_id: str
     case_id: str
+    evaluator_name: str
+    evaluator_version: str
+    finding_type: FindingType
+    explanation: str
+
+    severity: Severity | None = None
     fact_id: str | None = None
+    source_ref: str | None = None
+    source_evidence: str | None = None
+    output_evidence: str | None = None
+
+    # 1.0 for a deterministic detection with no ambiguity; lower where the
+    # evaluator relied on a weaker match level or a heuristic.
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0)
+    match_level: MatchLevel | None = None
+    details: dict[str, Any] = Field(default_factory=dict)
+
+
+class MetricValue(BaseModel):
+    """One computed metric, carrying the counts it was derived from.
+
+    Storing numerator and denominator alongside the value is what lets an
+    aggregate be recomputed by pooling rather than by averaging averages, and
+    lets a reader see that "100% retention" came from 1 of 1 rather than 40
+    of 40. `value` is None where the denominator is zero - an undefined
+    metric is reported as undefined, never as 0.0 or 1.0.
+    """
+
+    name: str
+    value: float | None
+    numerator: float
+    denominator: float
+    definition: str
+
+    @property
+    def is_defined(self) -> bool:
+        return self.value is not None
 
 
 class CaseResult(BaseModel):
@@ -227,8 +268,24 @@ class CaseResult(BaseModel):
 
     evaluation_run_id: str
     case_id: str
-    metrics: dict[str, float] = Field(default_factory=dict)
-    failures: list[Failure] = Field(default_factory=list)
+    metrics: dict[str, MetricValue] = Field(default_factory=dict)
+    findings: list[EvaluationFinding] = Field(default_factory=list)
+
+
+class EvaluationResult(BaseModel):
+    """The complete output of evaluating one model against one benchmark."""
+
+    evaluation_run_id: str
+    benchmark_version: str
+    model_id: str
+    evaluation_version: str
+    generated_at: datetime = Field(default_factory=_utcnow)
+    cases_evaluated: int = 0
+    evaluators: list[dict[str, str]] = Field(default_factory=list)
+    metrics: dict[str, MetricValue] = Field(default_factory=dict)
+    case_results: list[CaseResult] = Field(default_factory=list)
+    findings: list[EvaluationFinding] = Field(default_factory=list)
+    configuration: dict[str, Any] = Field(default_factory=dict)
 
 
 class EvaluationRun(BaseModel):

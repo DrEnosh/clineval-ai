@@ -288,7 +288,10 @@ def apply_relevant_negative_findings(draft: CaseDraft, rng: Random) -> None:
         pool.extend(template.negatives)
     pool.extend(content.GENERIC_NEGATIVES)
     existing = {f.description for f in draft.findings}
-    choices = [n for n in dict.fromkeys(pool) if n not in existing]
+    choices = [
+        n for n in dict.fromkeys(pool)
+        if n not in existing and not _collides_with_conflict(n, draft)
+    ]
     if not choices:
         return
     for description in rng.sample(choices, k=min(rng.randint(2, 3), len(choices))):
@@ -346,38 +349,75 @@ def apply_historical_vs_current(draft: CaseDraft, rng: Random) -> None:
             )
 
 
+# Each conflict option carries the terms it ultimately *asserts*. A case must
+# not both deny something in its findings and assert it via a conflict
+# resolution - that is ground truth contradicting itself, and an evaluator is
+# right to flag it. Caught by evaluating the reference summary against itself.
+_CONFLICT_OPTIONS: tuple[tuple[str, str, str, str, tuple[str, ...]], ...] = (
+    (
+        "chest pain",
+        "patient denies chest pain",
+        "patient reports intermittent pressure-like chest pain since this morning",
+        "The later assessment supersedes the initial history; chest pain is present.",
+        ("chest pain",),
+    ),
+    (
+        "medication adherence",
+        "patient reports taking all medications as prescribed",
+        "patient reports having run out of medications two weeks ago",
+        "The later history supersedes the initial report; the patient has not been "
+        "taking medications for two weeks.",
+        ("medication adherence",),
+    ),
+    (
+        "fever",
+        "patient denies fever at triage",
+        "patient reports subjective fevers for the past three days",
+        "The later history supersedes the triage report; subjective fevers are present.",
+        ("fever",),
+    ),
+    (
+        "fall history",
+        "patient denies recent falls",
+        "family reports two falls in the past month",
+        "The collateral history supersedes the patient's initial report; recent "
+        "falls have occurred.",
+        ("falls", "fall"),
+    ),
+)
+
+
+def _conflict_assertions(draft: CaseDraft) -> set[str]:
+    """Terms this case's conflicts ultimately assert as present."""
+    asserted: set[str] = set()
+    for conflict in draft.conflicts:
+        for topic, _, _, _, terms in _CONFLICT_OPTIONS:
+            if conflict.topic == topic:
+                asserted.update(terms)
+    return asserted
+
+
+def _collides_with_conflict(description: str, draft: CaseDraft) -> bool:
+    """True when a negative finding would deny what a conflict asserts."""
+    lowered = description.lower()
+    return any(term in lowered for term in _conflict_assertions(draft))
+
+
 def apply_conflicting_information(draft: CaseDraft, rng: Random) -> None:
-    """An earlier statement superseded by a later reassessment (CR-07)."""
-    topic, earlier, later, resolution = rng.choice(
-        [
-            (
-                "chest pain",
-                "patient denies chest pain",
-                "patient reports intermittent pressure-like chest pain since this morning",
-                "The later assessment supersedes the initial history; chest pain is present.",
-            ),
-            (
-                "medication adherence",
-                "patient reports taking all medications as prescribed",
-                "patient reports having run out of medications two weeks ago",
-                "The later history supersedes the initial report; the patient has not been "
-                "taking medications for two weeks.",
-            ),
-            (
-                "fever",
-                "patient denies fever at triage",
-                "patient reports subjective fevers for the past three days",
-                "The later history supersedes the triage report; subjective fevers are present.",
-            ),
-            (
-                "fall history",
-                "patient denies recent falls",
-                "family reports two falls in the past month",
-                "The collateral history supersedes the patient's initial report; recent "
-                "falls have occurred.",
-            ),
-        ]
-    )
+    """An earlier statement superseded by a later reassessment (CR-07).
+
+    Skips any topic the case already documents as a relevant negative, so the
+    resolution never contradicts an existing finding.
+    """
+    existing = " ".join(finding.description.lower() for finding in draft.findings)
+    available = [
+        option for option in _CONFLICT_OPTIONS
+        if not any(term in existing for term in option[4])
+    ]
+    if not available:
+        return
+
+    topic, earlier, later, resolution, _ = rng.choice(available)
     conflict = draft.add_conflict(
         topic=topic,
         earlier_statement=earlier, earlier_timing="on initial assessment",
@@ -562,7 +602,11 @@ def apply_duplicate_documentation(draft: CaseDraft, rng: Random) -> None:
 def apply_long_note(draft: CaseDraft, rng: Random) -> None:
     """Verbose documentation - extra review of systems and exam detail."""
     draft.verbose_note = True
-    pool = [n for n in content.GENERIC_NEGATIVES if n not in {f.description for f in draft.findings}]
+    existing = {f.description for f in draft.findings}
+    pool = [
+        n for n in content.GENERIC_NEGATIVES
+        if n not in existing and not _collides_with_conflict(n, draft)
+    ]
     for description in rng.sample(pool, k=min(3, len(pool))):
         draft.add_finding(description, present=False, significance=FindingSignificance.ROUTINE)
 

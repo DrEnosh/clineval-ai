@@ -448,6 +448,47 @@ def check_no_duplicate_measurements(case: BenchmarkCase) -> list[IntegrityIssue]
     return issues
 
 
+def check_no_self_contradiction(case: BenchmarkCase) -> list[IntegrityIssue]:
+    """Reject a case that both denies and asserts the same thing.
+
+    A case documenting "no recent falls" as a relevant negative while a
+    conflict resolves that falls *did* occur is ground truth contradicting
+    itself. An evaluator is right to flag it, so the defect must be caught
+    here rather than showing up as an evaluator false positive - which is
+    exactly how it was found.
+    """
+    structured = case.structured_case
+    if structured is None:
+        return []
+
+    issues: list[IntegrityIssue] = []
+    asserted = " ".join(
+        f"{conflict.later_statement} {conflict.resolution}".lower()
+        for conflict in structured.conflicts
+    )
+    if not asserted:
+        return []
+
+    for finding in structured.relevant_negatives:
+        core = finding.description.lower()
+        for prefix in ("no history of ", "no known ", "no recent ", "no "):
+            if core.startswith(prefix):
+                core = core[len(prefix) :]
+                break
+        # Match on the stem so "falls" in the finding meets "falls have
+        # occurred" in the resolution.
+        stem = core.rstrip("s")
+        if stem and len(stem) > 3 and stem in asserted:
+            issues.append(
+                IntegrityIssue(
+                    "no_self_contradiction", case.case_id,
+                    f"finding '{finding.description}' denies '{core}', which a conflict "
+                    f"resolution asserts as present",
+                )
+            )
+    return issues
+
+
 def check_metadata_matches(
     cases: list[BenchmarkCase], metadata: dict[str, Any]
 ) -> list[IntegrityIssue]:
@@ -491,6 +532,7 @@ PER_CASE_CHECKS = (
     check_summary_supported,
     check_no_identifiable_information,
     check_no_duplicate_measurements,
+    check_no_self_contradiction,
     check_case_structure,
 )
 

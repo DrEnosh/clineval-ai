@@ -24716,7 +24716,7 @@
     ],
     "follow_up": [],
     "clinical_note": "CLINICAL NOTE\n\nEncounter: Primary care follow-up (outpatient primary care)\n\nSUBJECTIVE:\n25-year-old male seen today for primary care follow-up. Known history of atrial fibrillation (6 months ago).\nHistory of chronic obstructive pulmonary disease, resolved 5 years ago; this is not an active problem.\nPertinent negatives: no history of hyperlipidemia; no unintentional weight loss; no syncope; no recent falls.\n\nMEDICATIONS:\n- Diltiazem 180 mg oral daily (current)\n- Prednisone 40 mg oral daily (prior medication, not current) 5 years ago, taken in the past, not currently prescribed\n\nVITAL SIGNS:\nBlood pressure 117/82 mmHg, Heart rate 60 bpm, Blood pressure 150/97 mmHg (HIGH)\n\nLABORATORY RESULTS:\n- Creatinine 1.4 mg/dL (today) - HIGH [ref 0.6-1.2 mg/dL]\n- White blood cell count 7.4 K/uL (6 weeks ago)\n- White blood cell count 19.5 K/uL (today) - HIGH [ref 4-11 K/uL]\n- Creatinine 0.8 mg/dL (on admission)\n- Creatinine 2.7 mg/dL (on hospital day 2) - HIGH [ref 0.6-1.2 mg/dL]\n- Creatinine 1.8 mg/dL (at discharge) - HIGH [ref 0.6-1.2 mg/dL]\nWhite blood cell count has increased from 7.4 K/uL (6 weeks ago) to 19.5 K/uL (today).\nCreatinine has increased from 0.8 mg/dL (on admission) to 2.7 mg/dL (on hospital day 2).\nCreatinine has decreased from 2.7 mg/dL (on hospital day 2) to 1.8 mg/dL (at discharge).\n\nEXAMINATION AND FINDINGS:\nExtremities warm and well perfused; no acute distress.\n\nCLINICAL COURSE:\n- Creatinine rose to 2.7 mg/dL on hospital day 2.\n- Creatinine improved to 1.8 mg/dL by discharge.\n\nASSESSMENT:\n1. Atrial fibrillation (primary)\n\nREVIEW OF SYSTEMS:\nConstitutional, cardiovascular, respiratory, gastrointestinal, genitourinary, musculoskeletal, neurologic, and psychiatric systems reviewed and negative except as documented above.",
-    "reference_summary": "25-year-old male seen for primary care follow-up with atrial fibrillation. White blood cell count rose from 7.4 to 19.5 K/uL between 6 weeks ago and today. Creatinine rose from 0.8 to 2.7 mg/dL between on admission and on hospital day 2. Creatinine fell from 2.7 to 1.8 mg/dL between on hospital day 2 and at discharge. Abnormal vital signs: blood pressure 150/97 mmHg. Prednisone was taken in the past and is not a current medication. Continued on Diltiazem 180 mg. Historical, not active: chronic obstructive pulmonary disease (resolved 5 years ago). Documented negatives: no history of hyperlipidemia.",
+    "reference_summary": "25-year-old male seen for primary care follow-up with atrial fibrillation. White blood cell count rose from 7.4 to 19.5 K/uL between 6 weeks ago and today. Creatinine rose from 0.8 to 2.7 mg/dL between on admission and on hospital day 2. Creatinine fell from 2.7 to 1.8 mg/dL between on hospital day 2 and at discharge. Creatinine is abnormal at 1.4 mg/dL (elevated, today). Abnormal vital signs: blood pressure 150/97 mmHg. Prednisone was taken in the past and is not a current medication. Continued on Diltiazem 180 mg. Historical, not active: chronic obstructive pulmonary disease (resolved 5 years ago). Documented negatives: no history of hyperlipidemia.",
     "critical_facts": [
       {
         "fact_id": "SYN_0058-F001",
@@ -41322,7 +41322,7 @@
       "reassess symptoms; follow up with cardiology in 1 week"
     ],
     "clinical_note": "CLINICAL NOTE\n\nEncounter: Heart failure clinic visit (outpatient specialty)\n\nSUBJECTIVE:\n25-year-old male presents for heart failure clinic visit. Known history of heart failure with reduced ejection fraction (6 months ago).\nHistory of major depressive disorder, resolved 2 years ago; this is not an active problem.\nPertinent negatives: no fever; no chest pain; no shortness of breath at rest.\n\nMEDICATIONS:\n- Furosemide 40 mg oral daily (current)\n- Sertraline 50 mg oral daily (prior medication, not current) 2 years ago, taken in the past, not currently prescribed\n- Metoprolol succinate 100 mg oral daily (dose changed); increased from 50 mg 2 weeks ago, increased due to an elevated result\n- Spironolactone 12.5 mg oral daily (DISCONTINUED) 6 weeks ago, discontinued due to hyperkalemia\n\nVITAL SIGNS:\nBlood pressure 130/74 mmHg, Heart rate 94 bpm\n\nLABORATORY RESULTS:\n- Creatinine 4.5 mg/dL (today) - CRITICAL HIGH [ref 0.6-1.2 mg/dL]\n- Creatinine 1.1 mg/dL (on admission)\n- Creatinine 2.6 mg/dL (on hospital day 2) - HIGH [ref 0.6-1.2 mg/dL]\n- Creatinine 1.9 mg/dL (at discharge) - HIGH [ref 0.6-1.2 mg/dL]\nCreatinine has increased from 1.1 mg/dL (on admission) to 2.6 mg/dL (on hospital day 2).\nCreatinine has decreased from 2.6 mg/dL (on hospital day 2) to 1.9 mg/dL (at discharge).\n\nEXAMINATION AND FINDINGS:\nAlert and oriented; abdomen soft and non-tender.\n\nPROCEDURES AND STUDIES:\n- Echocardiogram (today): no interval change\n\nCLINICAL COURSE:\n- Spironolactone discontinued 6 weeks ago due to hyperkalemia.\n- Metoprolol succinate increased from 50 mg to 100 mg 2 weeks ago.\n- Creatinine rose to 2.6 mg/dL on hospital day 2.\n- Creatinine improved to 1.9 mg/dL by discharge.\n\nASSESSMENT:\n1. Heart failure with reduced ejection fraction (primary)\n\nPLAN:\n- Reassess symptoms; follow up with cardiology in 1 week.\n\nREVIEW OF SYSTEMS:\nConstitutional, cardiovascular, respiratory, gastrointestinal, genitourinary, musculoskeletal, neurologic, and psychiatric systems reviewed and negative except as documented above.",
-    "reference_summary": "25-year-old male seen for heart failure clinic visit with heart failure with reduced ejection fraction. Creatinine rose from 1.1 to 2.6 mg/dL between on admission and on hospital day 2. Creatinine fell from 2.6 to 1.9 mg/dL between on hospital day 2 and at discharge. Sertraline was taken in the past and is not a current medication. Metoprolol succinate was increased from 50 mg to 100 mg 2 weeks ago. Spironolactone was discontinued 6 weeks ago (discontinued due to hyperkalemia). Continued on Furosemide 40 mg. Historical, not active: major depressive disorder (resolved 2 years ago). Studies: Echocardiogram - no interval change. Plan: reassess symptoms; follow up with cardiology in 1 week.",
+    "reference_summary": "25-year-old male seen for heart failure clinic visit with heart failure with reduced ejection fraction. Creatinine rose from 1.1 to 2.6 mg/dL between on admission and on hospital day 2. Creatinine fell from 2.6 to 1.9 mg/dL between on hospital day 2 and at discharge. Creatinine is critically abnormal at 4.5 mg/dL (elevated, today). Sertraline was taken in the past and is not a current medication. Metoprolol succinate was increased from 50 mg to 100 mg 2 weeks ago. Spironolactone was discontinued 6 weeks ago (discontinued due to hyperkalemia). Continued on Furosemide 40 mg. Historical, not active: major depressive disorder (resolved 2 years ago). Studies: Echocardiogram - no interval change. Plan: reassess symptoms; follow up with cardiology in 1 week.",
     "critical_facts": [
       {
         "fact_id": "SYN_0078-F001",
@@ -53958,12 +53958,12 @@
     "relevant_negative_findings": [
       "no history of hyperlipidemia",
       "no history of anemia",
-      "no recent falls",
+      "no unintentional weight loss",
       "no chest pain",
-      "no fever"
+      "no shortness of breath at rest"
     ],
     "follow_up": [],
-    "clinical_note": "CLINICAL NOTE\n\nEncounter: Urgent care visit (urgent care)\n\nSUBJECTIVE:\n62-year-old female seen today for urgent care visit. Known history of asthma (3 months ago).\nHistory of heart failure with reduced ejection fraction, resolved 2 years ago; this is not an active problem.\nPertinent negatives: no history of hyperlipidemia; no history of anemia; no recent falls; no chest pain; no fever.\nOn initial assessment, patient denies recent falls. On reassessment later in the encounter, family reports two falls in the past month. The collateral history supersedes the patient's initial report; recent falls have occurred.\n\nMEDICATIONS:\n- Albuterol 2 puffs inhaled as needed (current)\n- Metoprolol succinate 25 mg oral daily (prior medication, not current) 2 years ago, taken in the past, not currently prescribed\n- Spironolactone 25 mg oral daily (dose changed); increased from 12.5 mg 3 months ago, increased due to worsening symptoms\n- Furosemide 80 mg oral daily (DISCONTINUED) 6 months ago, discontinued due to intolerance\n\nVITAL SIGNS:\nBlood pressure 110/71 mmHg, Heart rate 74 bpm\n\nLABORATORY RESULTS:\n- BNP 47 pg/mL (6 weeks ago)\n- BNP 942 pg/mL (today) - HIGH [ref 0-100 pg/mL]\n- Sodium 137 mEq/L (1 month ago)\n- Sodium 127 mEq/L (today) - LOW [ref 135-145 mEq/L]\nBNP has increased from 47 pg/mL (6 weeks ago) to 942 pg/mL (today).\nSodium has decreased from 137 mEq/L (1 month ago) to 127 mEq/L (today).\n\nEXAMINATION AND FINDINGS:\nAlert and oriented; no acute distress; creatinine result is pending at the time of this note.\n\nCLINICAL COURSE:\n- Furosemide discontinued 6 months ago due to intolerance.\n- Spironolactone increased from 12.5 mg to 25 mg 3 months ago.\n\nASSESSMENT:\n1. Asthma (primary)\n\nREVIEW OF SYSTEMS:\nConstitutional, cardiovascular, respiratory, gastrointestinal, genitourinary, musculoskeletal, neurologic, and psychiatric systems reviewed and negative except as documented above.",
+    "clinical_note": "CLINICAL NOTE\n\nEncounter: Urgent care visit (urgent care)\n\nSUBJECTIVE:\n62-year-old female seen today for urgent care visit. Known history of asthma (3 months ago).\nHistory of heart failure with reduced ejection fraction, resolved 2 years ago; this is not an active problem.\nPertinent negatives: no history of hyperlipidemia; no history of anemia; no unintentional weight loss; no chest pain; no shortness of breath at rest.\nOn initial assessment, patient denies recent falls. On reassessment later in the encounter, family reports two falls in the past month. The collateral history supersedes the patient's initial report; recent falls have occurred.\n\nMEDICATIONS:\n- Albuterol 2 puffs inhaled as needed (current)\n- Metoprolol succinate 25 mg oral daily (prior medication, not current) 2 years ago, taken in the past, not currently prescribed\n- Spironolactone 25 mg oral daily (dose changed); increased from 12.5 mg 3 months ago, increased due to worsening symptoms\n- Furosemide 80 mg oral daily (DISCONTINUED) 6 months ago, discontinued due to intolerance\n\nVITAL SIGNS:\nBlood pressure 110/71 mmHg, Heart rate 74 bpm\n\nLABORATORY RESULTS:\n- BNP 47 pg/mL (6 weeks ago)\n- BNP 942 pg/mL (today) - HIGH [ref 0-100 pg/mL]\n- Sodium 137 mEq/L (1 month ago)\n- Sodium 127 mEq/L (today) - LOW [ref 135-145 mEq/L]\nBNP has increased from 47 pg/mL (6 weeks ago) to 942 pg/mL (today).\nSodium has decreased from 137 mEq/L (1 month ago) to 127 mEq/L (today).\n\nEXAMINATION AND FINDINGS:\nAlert and oriented; no acute distress; creatinine result is pending at the time of this note.\n\nCLINICAL COURSE:\n- Furosemide discontinued 6 months ago due to intolerance.\n- Spironolactone increased from 12.5 mg to 25 mg 3 months ago.\n\nASSESSMENT:\n1. Asthma (primary)\n\nREVIEW OF SYSTEMS:\nConstitutional, cardiovascular, respiratory, gastrointestinal, genitourinary, musculoskeletal, neurologic, and psychiatric systems reviewed and negative except as documented above.",
     "reference_summary": "62-year-old female seen for urgent care visit with asthma. Regarding fall history: family reports two falls in the past month. The collateral history supersedes the patient's initial report; recent falls have occurred. BNP rose from 47 to 942 pg/mL between 6 weeks ago and today. Sodium fell from 137 to 127 mEq/L between 1 month ago and today. Metoprolol succinate was taken in the past and is not a current medication. Spironolactone was increased from 12.5 mg to 25 mg 3 months ago. Furosemide was discontinued 6 months ago (discontinued due to intolerance). Continued on Albuterol 2 puffs. Historical, not active: heart failure with reduced ejection fraction (resolved 2 years ago). Documented negatives: no history of hyperlipidemia; no history of anemia.",
     "critical_facts": [
       {
@@ -54275,7 +54275,7 @@
       {
         "fact_id": "SYN_0093-N003",
         "type": "observation",
-        "content": "No recent falls",
+        "content": "No unintentional weight loss",
         "importance": "non_critical",
         "polarity": "negated",
         "attributes": {},
@@ -54295,7 +54295,7 @@
       {
         "fact_id": "SYN_0093-N005",
         "type": "observation",
-        "content": "No fever",
+        "content": "No shortness of breath at rest",
         "importance": "non_critical",
         "polarity": "negated",
         "attributes": {},
@@ -54587,7 +54587,7 @@
         },
         {
           "entity_id": "FIND-006",
-          "description": "no recent falls",
+          "description": "no unintentional weight loss",
           "present": false,
           "significance": "routine",
           "timing_description": "today"
@@ -54601,7 +54601,7 @@
         },
         {
           "entity_id": "FIND-008",
-          "description": "no fever",
+          "description": "no shortness of breath at rest",
           "present": false,
           "significance": "routine",
           "timing_description": "today"
@@ -57577,12 +57577,12 @@
     "relevant_negative_findings": [
       "no history of heart failure",
       "no history of hyperlipidemia",
-      "no unintentional weight loss",
-      "no shortness of breath at rest",
-      "no syncope"
+      "no syncope",
+      "no recent falls",
+      "no shortness of breath at rest"
     ],
     "follow_up": [],
-    "clinical_note": "CLINICAL NOTE\n\nEncounter: Behavioral health follow-up (outpatient specialty)\n\nSUBJECTIVE:\n57-year-old male presents for behavioral health follow-up. Known history of major depressive disorder (3 months ago).\nHistory of gastroesophageal reflux disease, resolved 5 years ago; this is not an active problem.\nPertinent negatives: no history of heart failure; no history of hyperlipidemia; no unintentional weight loss; no shortness of breath at rest; no syncope.\nOn initial assessment, patient denies chest pain. On reassessment later in the encounter, patient reports intermittent pressure-like chest pain since this morning. The later assessment supersedes the initial history; chest pain is present.\n\nMEDICATIONS:\n- Sertraline 50 mg oral daily (current)\n- Pantoprazole 20 mg oral daily (prior medication, not current) 5 years ago, taken in the past, not currently prescribed\n- Omeprazole 20 mg oral daily (DISCONTINUED) 3 months ago, discontinued due to intolerance\n\nALLERGIES:\n- Aspirin - bronchospasm (severe)\n\nVITAL SIGNS:\nBlood pressure 130/73 mmHg, Heart rate 72 bpm\n\nLABORATORY RESULTS:\n- Potassium 7.5 mEq/L (today) - CRITICAL HIGH [ref 3.5-5 mEq/L]\n- White blood cell count 8 K/uL (3 months ago)\n- White blood cell count 16.2 K/uL (today) - HIGH [ref 4-11 K/uL]\nWhite blood cell count has increased from 8 K/uL (3 months ago) to 16.2 K/uL (today).\n\nEXAMINATION AND FINDINGS:\nRegular rate and rhythm; extremities warm and well perfused.\n\nCLINICAL COURSE:\n- Omeprazole discontinued 3 months ago due to intolerance.\n- Panic-range Potassium identified: Potassium 7.5 mEq/L.\n\nASSESSMENT:\n1. Major depressive disorder (primary)\n\nREVIEW OF SYSTEMS:\nConstitutional, cardiovascular, respiratory, gastrointestinal, genitourinary, musculoskeletal, neurologic, and psychiatric systems reviewed and negative except as documented above.",
+    "clinical_note": "CLINICAL NOTE\n\nEncounter: Behavioral health follow-up (outpatient specialty)\n\nSUBJECTIVE:\n57-year-old male presents for behavioral health follow-up. Known history of major depressive disorder (3 months ago).\nHistory of gastroesophageal reflux disease, resolved 5 years ago; this is not an active problem.\nPertinent negatives: no history of heart failure; no history of hyperlipidemia; no syncope; no recent falls; no shortness of breath at rest.\nOn initial assessment, patient denies chest pain. On reassessment later in the encounter, patient reports intermittent pressure-like chest pain since this morning. The later assessment supersedes the initial history; chest pain is present.\n\nMEDICATIONS:\n- Sertraline 50 mg oral daily (current)\n- Pantoprazole 20 mg oral daily (prior medication, not current) 5 years ago, taken in the past, not currently prescribed\n- Omeprazole 20 mg oral daily (DISCONTINUED) 3 months ago, discontinued due to intolerance\n\nALLERGIES:\n- Aspirin - bronchospasm (severe)\n\nVITAL SIGNS:\nBlood pressure 130/73 mmHg, Heart rate 72 bpm\n\nLABORATORY RESULTS:\n- Potassium 7.5 mEq/L (today) - CRITICAL HIGH [ref 3.5-5 mEq/L]\n- White blood cell count 8 K/uL (3 months ago)\n- White blood cell count 16.2 K/uL (today) - HIGH [ref 4-11 K/uL]\nWhite blood cell count has increased from 8 K/uL (3 months ago) to 16.2 K/uL (today).\n\nEXAMINATION AND FINDINGS:\nRegular rate and rhythm; extremities warm and well perfused.\n\nCLINICAL COURSE:\n- Omeprazole discontinued 3 months ago due to intolerance.\n- Panic-range Potassium identified: Potassium 7.5 mEq/L.\n\nASSESSMENT:\n1. Major depressive disorder (primary)\n\nREVIEW OF SYSTEMS:\nConstitutional, cardiovascular, respiratory, gastrointestinal, genitourinary, musculoskeletal, neurologic, and psychiatric systems reviewed and negative except as documented above.",
     "reference_summary": "57-year-old male seen for behavioral health follow-up with major depressive disorder. Regarding chest pain: patient reports intermittent pressure-like chest pain since this morning. The later assessment supersedes the initial history; chest pain is present. White blood cell count rose from 8 to 16.2 K/uL between 3 months ago and today. Potassium is critically abnormal at 7.5 mEq/L (elevated, today). Pantoprazole was taken in the past and is not a current medication. Omeprazole was discontinued 3 months ago (discontinued due to intolerance). Continued on Sertraline 50 mg. Severe allergy: Aspirin (bronchospasm). Historical, not active: gastroesophageal reflux disease (resolved 5 years ago). Documented negatives: no history of heart failure; no history of hyperlipidemia.",
     "critical_facts": [
       {
@@ -57842,7 +57842,7 @@
       {
         "fact_id": "SYN_0097-N003",
         "type": "observation",
-        "content": "No unintentional weight loss",
+        "content": "No syncope",
         "importance": "non_critical",
         "polarity": "negated",
         "attributes": {},
@@ -57852,7 +57852,7 @@
       {
         "fact_id": "SYN_0097-N004",
         "type": "observation",
-        "content": "No shortness of breath at rest",
+        "content": "No recent falls",
         "importance": "non_critical",
         "polarity": "negated",
         "attributes": {},
@@ -57862,7 +57862,7 @@
       {
         "fact_id": "SYN_0097-N005",
         "type": "observation",
-        "content": "No syncope",
+        "content": "No shortness of breath at rest",
         "importance": "non_critical",
         "polarity": "negated",
         "attributes": {},
@@ -58113,21 +58113,21 @@
         },
         {
           "entity_id": "FIND-005",
-          "description": "no unintentional weight loss",
+          "description": "no syncope",
           "present": false,
           "significance": "routine",
           "timing_description": "today"
         },
         {
           "entity_id": "FIND-006",
-          "description": "no shortness of breath at rest",
+          "description": "no recent falls",
           "present": false,
           "significance": "routine",
           "timing_description": "today"
         },
         {
           "entity_id": "FIND-007",
-          "description": "no syncope",
+          "description": "no shortness of breath at rest",
           "present": false,
           "significance": "routine",
           "timing_description": "today"
@@ -60326,12 +60326,12 @@
     ],
     "relevant_negative_findings": [
       "no history of anemia",
-      "no recent falls",
-      "no fever",
-      "no syncope"
+      "no unintentional weight loss",
+      "no chest pain",
+      "no shortness of breath at rest"
     ],
     "follow_up": [],
-    "clinical_note": "CLINICAL NOTE\n\nEncounter: Neurology follow-up (outpatient specialty)\n\nSUBJECTIVE:\n20-year-old female seen today for neurology follow-up. Known history of seizure disorder (6 weeks ago).\nHistory of heart failure with reduced ejection fraction, resolved 5 years ago; this is not an active problem.\nPertinent negatives: no history of anemia; no recent falls; no fever; no syncope.\nOn initial assessment, patient denies fever at triage. On reassessment later in the encounter, patient reports subjective fevers for the past three days. The later history supersedes the triage report; subjective fevers are present.\n\nMEDICATIONS:\n- Levetiracetam 500 mg oral twice daily (current)\n- Furosemide 40 mg oral daily (prior medication, not current) 5 years ago, taken in the past, not currently prescribed\n- Spironolactone 25 mg oral daily (DISCONTINUED) 3 months ago, discontinued due to intolerance\n- Metoprolol succinate 12.5 mg oral daily (DISCONTINUED) 3 months ago, discontinued due to hypotension\n\nALLERGIES:\n- Aspirin - bronchospasm (severe)\n\nVITAL SIGNS:\nBlood pressure 119/72 mmHg, Heart rate 80 bpm\n\nLABORATORY RESULTS:\n- eGFR 13 mL/min/1.73m2 (today) - CRITICAL LOW [ref 60-120 mL/min/1.73m2]\n- BNP 65 pg/mL (2 weeks ago)\n- BNP 1202 pg/mL (today) - HIGH [ref 0-100 pg/mL]\nBNP has increased from 65 pg/mL (2 weeks ago) to 1202 pg/mL (today).\n\nEXAMINATION AND FINDINGS:\nExtremities warm and well perfused; alert and oriented.\n\nCLINICAL COURSE:\n- Spironolactone discontinued 3 months ago due to intolerance.\n- Metoprolol succinate discontinued 3 months ago due to hypotension.\n- Panic-range eGFR identified: eGFR 13 mL/min/1.73m2.\n\nASSESSMENT:\n1. Seizure disorder (primary)\n\nREVIEW OF SYSTEMS:\nConstitutional, cardiovascular, respiratory, gastrointestinal, genitourinary, musculoskeletal, neurologic, and psychiatric systems reviewed and negative except as documented above.\n\nINTERVAL NOTE:\nAs documented above, extremities warm and well perfused.",
+    "clinical_note": "CLINICAL NOTE\n\nEncounter: Neurology follow-up (outpatient specialty)\n\nSUBJECTIVE:\n20-year-old female seen today for neurology follow-up. Known history of seizure disorder (6 weeks ago).\nHistory of heart failure with reduced ejection fraction, resolved 5 years ago; this is not an active problem.\nPertinent negatives: no history of anemia; no unintentional weight loss; no chest pain; no shortness of breath at rest.\nOn initial assessment, patient denies fever at triage. On reassessment later in the encounter, patient reports subjective fevers for the past three days. The later history supersedes the triage report; subjective fevers are present.\n\nMEDICATIONS:\n- Levetiracetam 500 mg oral twice daily (current)\n- Furosemide 40 mg oral daily (prior medication, not current) 5 years ago, taken in the past, not currently prescribed\n- Spironolactone 25 mg oral daily (DISCONTINUED) 3 months ago, discontinued due to intolerance\n- Metoprolol succinate 12.5 mg oral daily (DISCONTINUED) 3 months ago, discontinued due to hypotension\n\nALLERGIES:\n- Aspirin - bronchospasm (severe)\n\nVITAL SIGNS:\nBlood pressure 119/72 mmHg, Heart rate 80 bpm\n\nLABORATORY RESULTS:\n- eGFR 13 mL/min/1.73m2 (today) - CRITICAL LOW [ref 60-120 mL/min/1.73m2]\n- BNP 65 pg/mL (2 weeks ago)\n- BNP 1202 pg/mL (today) - HIGH [ref 0-100 pg/mL]\nBNP has increased from 65 pg/mL (2 weeks ago) to 1202 pg/mL (today).\n\nEXAMINATION AND FINDINGS:\nExtremities warm and well perfused; alert and oriented.\n\nCLINICAL COURSE:\n- Spironolactone discontinued 3 months ago due to intolerance.\n- Metoprolol succinate discontinued 3 months ago due to hypotension.\n- Panic-range eGFR identified: eGFR 13 mL/min/1.73m2.\n\nASSESSMENT:\n1. Seizure disorder (primary)\n\nREVIEW OF SYSTEMS:\nConstitutional, cardiovascular, respiratory, gastrointestinal, genitourinary, musculoskeletal, neurologic, and psychiatric systems reviewed and negative except as documented above.\n\nINTERVAL NOTE:\nAs documented above, extremities warm and well perfused.",
     "reference_summary": "20-year-old female seen for neurology follow-up with seizure disorder. Regarding fever: patient reports subjective fevers for the past three days. The later history supersedes the triage report; subjective fevers are present. BNP rose from 65 to 1202 pg/mL between 2 weeks ago and today. eGFR is critically abnormal at 13 mL/min/1.73m2 (low, today). Furosemide was taken in the past and is not a current medication. Spironolactone was discontinued 3 months ago (discontinued due to intolerance). Metoprolol succinate was discontinued 3 months ago (discontinued due to hypotension). Continued on Levetiracetam 500 mg. Severe allergy: Aspirin (bronchospasm). Historical, not active: heart failure with reduced ejection fraction (resolved 5 years ago). Documented negatives: no history of anemia.",
     "critical_facts": [
       {
@@ -60589,7 +60589,7 @@
       {
         "fact_id": "SYN_0100-N002",
         "type": "observation",
-        "content": "No recent falls",
+        "content": "No unintentional weight loss",
         "importance": "non_critical",
         "polarity": "negated",
         "attributes": {},
@@ -60599,7 +60599,7 @@
       {
         "fact_id": "SYN_0100-N003",
         "type": "observation",
-        "content": "No fever",
+        "content": "No chest pain",
         "importance": "non_critical",
         "polarity": "negated",
         "attributes": {},
@@ -60609,7 +60609,7 @@
       {
         "fact_id": "SYN_0100-N004",
         "type": "observation",
-        "content": "No syncope",
+        "content": "No shortness of breath at rest",
         "importance": "non_critical",
         "polarity": "negated",
         "attributes": {},
@@ -60865,21 +60865,21 @@
         },
         {
           "entity_id": "FIND-004",
-          "description": "no recent falls",
+          "description": "no unintentional weight loss",
           "present": false,
           "significance": "routine",
           "timing_description": "today"
         },
         {
           "entity_id": "FIND-005",
-          "description": "no fever",
+          "description": "no chest pain",
           "present": false,
           "significance": "routine",
           "timing_description": "today"
         },
         {
           "entity_id": "FIND-006",
-          "description": "no syncope",
+          "description": "no shortness of breath at rest",
           "present": false,
           "significance": "routine",
           "timing_description": "today"

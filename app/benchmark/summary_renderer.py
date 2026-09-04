@@ -74,10 +74,20 @@ def _laboratory_sentences(case: StructuredCase) -> list[str]:
             f"{trend.earlier_timing} and {trend.later_timing}."
         )
 
-    # Abnormal values not already covered by a trend sentence.
+    # Abnormal values whose specific value a trend sentence did not already
+    # state. Suppressing by analyte *name* would drop a measurement that no
+    # trend covers - a case with both a standalone creatinine and a creatinine
+    # series would silently lose the standalone value from the reference
+    # summary. Caught by evaluating the reference summary against itself.
+    trended_values = {
+        (trend.lab_name, value)
+        for trend in case.lab_trends
+        if trend.clinically_significant
+        for value in (trend.earlier_value, trend.later_value)
+    }
     standalone = [
         lab for lab in case.labs
-        if lab.is_abnormal and lab.name not in trended_labs
+        if lab.is_abnormal and (lab.name, lab.value) not in trended_values
     ]
     for lab in standalone:
         qualifier = "critically abnormal" if lab.is_critical_value else "abnormal"

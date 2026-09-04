@@ -96,16 +96,84 @@ class CaseType(str, Enum):
     DEMOGRAPHIC_SUBGROUP = "demographic_subgroup"
 
 
-class FailureType(str, Enum):
-    UNSUPPORTED_ADDITION = "unsupported_addition"
-    CONTRADICTION = "contradiction"
+class FindingType(str, Enum):
+    """What an evaluator detected.
+
+    Detection only - severity is assigned separately by the severity policy
+    (see app/evaluation/severity.py), so an evaluator never decides how bad
+    its own finding is.
+    """
+
+    # Retention
     CRITICAL_OMISSION = "critical_omission"
     NON_CRITICAL_OMISSION = "non_critical_omission"
+    CONTRADICTION = "contradiction"
+
+    # Negation
     NEGATION_REVERSAL = "negation_reversal"
-    TEMPORAL_ERROR = "temporal_error"
-    MEDICATION_ERROR = "medication_error"
+    NEGATION_OMISSION = "negation_omission"
+
+    # Medication
+    MEDICATION_OMISSION = "medication_omission"
+    MEDICATION_HALLUCINATION = "medication_hallucination"
+    MEDICATION_STATUS_ERROR = "medication_status_error"
+    MEDICATION_DOSE_ERROR = "medication_dose_error"
+
+    # Temporal
+    TEMPORAL_INFORMATION_LOSS = "temporal_information_loss"
+    TEMPORAL_TREND_REVERSAL = "temporal_trend_reversal"
+    TEMPORAL_VALUE_CONFUSION = "temporal_value_confusion"
+    HISTORICAL_CURRENT_CONFUSION = "historical_current_confusion"
+
+    # Values
+    VALUE_ERROR = "value_error"
+    VALUE_APPROXIMATION = "value_approximation"
+
+    # Support
+    UNSUPPORTED_ADDITION = "unsupported_addition"
+    CONFLICT_RESOLUTION_ERROR = "conflict_resolution_error"
+
+    # Operational
+    EMPTY_OUTPUT = "empty_output"
+    MALFORMED_OUTPUT = "malformed_output"
+    MISSING_ANNOTATION = "missing_annotation"
     INCONSISTENT_ACROSS_RUNS = "inconsistent_across_runs"
     OTHER = "other"
+
+
+class MatchLevel(str, Enum):
+    """How a source term was matched in model output.
+
+    The ladder is ordered from most to least certain. Recording the level on
+    every match means a finding can say not just "not found" but "not found
+    at any matching level", and a reviewer can see whether a match rested on
+    an alias or an exact string (see docs/EVALUATION.md, fact matching).
+    """
+
+    EXACT = "exact"
+    NORMALIZED = "normalized"
+    ALIAS = "alias"
+    PARTIAL = "partial"
+    NONE = "none"
+
+
+class SupportStatus(str, Enum):
+    """Whether model output supports, omits, or contradicts a source fact."""
+
+    SUPPORTED = "supported"
+    PARTIAL = "partial"
+    OMITTED = "omitted"
+    CONTRADICTED = "contradicted"
+
+
+class ValueComparison(str, Enum):
+    """Result of comparing a clinical numeric value against its source."""
+
+    CORRECT = "correct"
+    APPROXIMATE = "approximate"
+    INCORRECT = "incorrect"
+    OMITTED = "omitted"
+    NOT_COMPARABLE = "not_comparable"
 
 
 class DataProvenance(str, Enum):

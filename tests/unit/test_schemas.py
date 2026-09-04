@@ -16,7 +16,7 @@ from app.core.enums import (
     FactImportance,
     FactPolarity,
     FactType,
-    FailureType,
+    FindingType,
     MedicationStatus,
     RiskLevel,
     Severity,
@@ -28,7 +28,8 @@ from app.models.schemas import (
     CaseResult,
     ClinicalFact,
     EvaluationRun,
-    Failure,
+    EvaluationFinding,
+    MetricValue,
     MedicationFact,
     TemporalFact,
 )
@@ -145,42 +146,83 @@ class TestBenchmarkCase:
 
 
 class TestEvaluationSchemas:
-    def test_failure_requires_evidence_and_explanation(self):
-        failure = Failure(
-            type=FailureType.CRITICAL_OMISSION, severity=Severity.HIGH,
+    def test_finding_records_its_evaluator_and_evidence(self):
+        """Phase 3 replaced the Phase 1 `Failure` placeholder: a finding must
+        now identify the evaluator that produced it and carry both sides of
+        the evidence, so it can be judged without re-reading the case."""
+        finding = EvaluationFinding(
+            finding_id="CASE_002-critical_retention-000",
+            case_id="CASE_002",
+            evaluator_name="critical_retention",
+            evaluator_version="0.3.0",
+            finding_type=FindingType.CRITICAL_OMISSION,
             explanation="Critical lab trend omitted from summary.",
-            evidence="Creatinine increased from 1.4 to 1.9 mg/dL",
-            case_id="CASE_002", fact_id="CASE_002-F001",
+            source_evidence="Creatinine increased from 1.4 to 1.9 mg/dL",
+            output_evidence="Creatinine was 1.4 mg/dL.",
+            fact_id="CASE_002-F001",
         )
-        assert failure.severity is Severity.HIGH
-        assert failure.evidence
+        assert finding.source_evidence and finding.output_evidence
+        assert finding.evaluator_name == "critical_retention"
 
+    def test_finding_severity_is_unset_until_the_policy_assigns_it(self):
+        """Evaluators detect; the severity policy classifies."""
+        finding = EvaluationFinding(
+            finding_id="F", case_id="C", evaluator_name="e", evaluator_version="1",
+            finding_type=FindingType.CRITICAL_OMISSION, explanation="x",
+        )
+        assert finding.severity is None
+
+    def test_finding_requires_its_identifying_fields(self):
         with pytest.raises(ValidationError):
-            Failure(
-                type=FailureType.CRITICAL_OMISSION, severity=Severity.HIGH,
-                explanation="missing evidence field", case_id="CASE_002",
+            EvaluationFinding(
+                finding_type=FindingType.CRITICAL_OMISSION,
+                explanation="missing identity fields",
             )
+
+    def test_finding_confidence_is_bounded(self):
+        with pytest.raises(ValidationError):
+            EvaluationFinding(
+                finding_id="F", case_id="C", evaluator_name="e", evaluator_version="1",
+                finding_type=FindingType.OTHER, explanation="x", confidence=1.5,
+            )
+
+    def test_metric_value_reports_undefined_rather_than_zero(self):
+        """A metric with no denominator has no value - not 0.0, not 1.0."""
+        metric = MetricValue(
+            name="critical_information_retention", value=None,
+            numerator=0, denominator=0, definition="retained / total",
+        )
+        assert metric.value is None
+        assert not metric.is_defined
 
     def test_ai_output_defaults_run_index_to_zero(self):
         output = AIOutput(case_id="CASE_001", model_id="model-a", summary_text="A summary.")
         assert output.run_index == 0
         assert output.generated_at is not None
 
-    def test_case_result_collects_failures(self):
+    def test_case_result_collects_findings_and_metrics(self):
         result = CaseResult(
             evaluation_run_id="RUN_1", case_id="CASE_002",
-            metrics={"critical_retention": 0.5},
-            failures=[
-                Failure(
-                    type=FailureType.CRITICAL_OMISSION, severity=Severity.HIGH,
+            metrics={
+                "critical_information_retention": MetricValue(
+                    name="critical_information_retention", value=0.5,
+                    numerator=1, denominator=2, definition="retained / total",
+                )
+            },
+            findings=[
+                EvaluationFinding(
+                    finding_id="CASE_002-critical_retention-000",
+                    case_id="CASE_002", evaluator_name="critical_retention",
+                    evaluator_version="0.3.0",
+                    finding_type=FindingType.CRITICAL_OMISSION,
                     explanation="Omitted renal decline.",
-                    evidence="Creatinine increased from 1.4 to 1.9 mg/dL",
-                    case_id="CASE_002",
+                    source_evidence="Creatinine increased from 1.4 to 1.9 mg/dL",
+                    severity=Severity.HIGH,
                 )
             ],
         )
-        assert result.metrics["critical_retention"] == 0.5
-        assert len(result.failures) == 1
+        assert result.metrics["critical_information_retention"].value == 0.5
+        assert len(result.findings) == 1
 
     def test_evaluation_run_records_reproducibility_fields(self):
         run = EvaluationRun(

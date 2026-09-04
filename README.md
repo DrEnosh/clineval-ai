@@ -50,22 +50,24 @@ Every score the platform reports traces back to records like this one.
 
 ## Status
 
-**Phases 1–2 of 13 are complete.** The foundation and the benchmark are done:
-schemas, the evaluator contract, a reproducible 100-case synthetic benchmark
-built ground-truth-first, a twelve-check integrity validator, a live API, and
-276 passing tests at 99% coverage.
+**Phases 1–3 of 13 are complete.** The foundation, the benchmark, and the
+deterministic evaluation engine are done: a reproducible 100-case benchmark
+built ground-truth-first, five evidence-backed evaluators, a configurable
+severity policy, self-validation by controlled failure injection, and 641
+passing tests at 98% coverage.
 
-The evaluator *implementations* are Phases 4–5 and are not written yet — the
-interfaces are defined, deliberately, before anything depends on them. **No
-model has been evaluated, and no evaluation results exist anywhere in this
-repository.**
+**No model has been evaluated, and no evaluation results exist anywhere in this
+repository.** Every output the engine has been run against comes from
+test-only providers, labelled as synthetic in their metadata. Real model
+outputs and LLM-assisted adjudication are Phase 4.
 
 | | |
 |---|---|
 | ✅ Repository, architecture, data schemas | ✅ 100-case generated benchmark + 10 curated cases |
-| ✅ Evaluation interfaces | ✅ Integrity audit with CI-gating exit code |
-| ✅ Minimal runnable API | ✅ 276 passing tests, 99% coverage |
-| ⬜ Evaluators, scoring, DB, dashboard, reports | |
+| ✅ Five deterministic evaluators | ✅ Integrity audit with CI-gating exit code |
+| ✅ Evidence-backed findings, configurable severity | ✅ Evaluator self-validation: 0 false positives, 9/9 injections detected |
+| ✅ Minimal runnable API | ✅ 641 passing tests, 98% coverage |
+| ⬜ LLM judge, risk scoring, DB, dashboard, reports | |
 
 See the [phase plan](docs/ARCHITECTURE.md#11-phase-plan) for what lands when.
 
@@ -224,6 +226,13 @@ cp .env.example .env
 .venv/Scripts/python.exe -m scripts.generate_benchmark --curated
 ```
 
+**Validate the evaluators** (false-positive check plus controlled failure
+injection; exits non-zero on regression):
+
+```bash
+.venv/Scripts/python.exe -m scripts.validate_evaluators --cases 50
+```
+
 **Run the API:**
 
 ```bash
@@ -260,20 +269,65 @@ project's rule against fabricated output, even as a placeholder.
 
 ## Evaluation methodology
 
-| Dimension | Definition |
-|---|---|
-| **Factuality** | Each gold fact classified as retained, incorrectly represented, missing, contradicted, or newly introduced |
-| **Critical retention** | `critical facts retained ÷ total critical facts`, reported with the omitted and contradicted facts named |
-| **Hallucination** | Content in the output unsupported by the source, split into unsupported additions vs. explicit contradictions |
-| **Negation** | Detects polarity reversal — a `NEGATED` source fact asserted as affirmed |
-| **Temporal** | Detects confusion of historical vs. current values, reversed trends, clinically meaningful date omissions |
-| **Medication** | Detects invented, omitted, wrong-drug, wrong-dose, and wrong-status medication errors |
-| **Repeatability** | Agreement across repeated generations for stochastic models |
+Five deterministic evaluators, each covering one clinically meaningful
+dimension. Full detail in [docs/EVALUATION.md](docs/EVALUATION.md).
 
-**On lexical and semantic metrics.** ROUGE, BLEU, and embedding similarity may be
-reported as *supplementary* signals. They are not measures of clinical
-correctness, and this platform exists largely because they are near-blind to the
-negation and temporal failures above.
+| Evaluator | What it detects |
+|---|---|
+| **Critical retention** | Each critical fact classified retained / omitted / contradicted, named by fact id |
+| **Medication consistency** | Omitted, invented, wrong-status, and wrong-dose medication errors across all five statuses |
+| **Negation consistency** | Polarity reversal — a `NEGATED` source fact asserted as affirmed |
+| **Temporal consistency** | Information loss, historical-value confusion, reversed trends, historical-vs-current framing |
+| **Fact support** | Every structured entity classified supported / partial / omitted / contradicted, plus unsupported additions |
+
+### Why not ROUGE
+
+A summarizer can score well on lexical overlap while being clinically wrong:
+
+| Source | Output | Lexical overlap | Clinically |
+|---|---|---|---|
+| "No history of diabetes." | "Patient has diabetes." | **Very high** | **Catastrophic** — fabricated diagnosis |
+| "Creatinine increased from 1.4 to 1.9." | "Creatinine was 1.4." | **High** | **Wrong** — stale value read as current |
+| "Chronic kidney disease stage 3" | "CKD stage 3" | **Low** | **Correct** |
+
+The first two are inverted: the outputs closest to the source text are the most
+harmful. So ClinEval compares against **structured clinical content**, not text
+— a medication's status against `MedicationStatus`, a trend against its
+recorded endpoints and direction. ROUGE and embedding similarity may be added
+later as clearly-labelled supplementary signals.
+
+### Detection is separate from severity
+
+Evaluators emit `finding_type` and say nothing about how bad it is; a
+configurable policy (`config/evaluation.yaml`) classifies afterwards. Severity
+is the most contestable judgment in the system, so it lives in one place a
+deploying institution can change without touching detection code.
+
+### Every finding carries its evidence
+
+```text
+HIGH   negation_reversal   [negation_consistency v0.3.0]
+  Source: no history of diabetes [ABSENT]
+  Output: The patient has a history of diabetes.
+  Fact:   SYN_0042-N001   Rule: CR-08   Match: alias   Confidence: 0.9
+```
+
+### The evaluator is itself evaluated
+
+```bash
+python -m scripts.validate_evaluators --cases 50
+```
+
+**Specificity:** the reference summary is correct by construction, so any
+finding against it is a false positive. Currently **0 across 100 cases**.
+
+**Sensitivity:** nine controlled injections each corrupt a correct summary in
+one known way. Currently **9/9 detected**, ≥97% each. Injections that cannot
+apply to a case are reported as *skipped*, never as passes.
+
+The oracle check went from **89 false positives to 0** during development —
+every one a real defect, and none visible from sensitivity numbers alone. It
+also caught a defect in the Phase 2 benchmark itself.
 
 **On LLM-as-judge.** Permitted, never authoritative. Any LLM judge must emit
 schema-validated JSON and record model version, prompt version, timestamp, and
@@ -323,24 +377,37 @@ itself:
   but not validated against any external standard.
 - **No clinician review.** Clinical content is plausible, not authoritative, and
   has not been reviewed by a licensed clinician.
-- **Evaluator implementations do not exist yet.** Phases 1–2 ship the contract
-  and the benchmark. No model has been evaluated, and no evaluation numbers
-  appear anywhere in this repository.
+- **No model has been evaluated.** Phases 1–3 ship the benchmark and the
+  evaluation engine. Every output the engine has run against comes from
+  test-only providers, labelled `is_real_model_output: False`. No evaluation
+  numbers describing any real system appear anywhere in this repository.
+- **The evaluator is validated on synthetic text only.** Zero false positives
+  and 9/9 injection detection are measured against generated summaries with
+  regular structure. Those rates should not be assumed to transfer to real
+  clinical documentation.
+- **Detection is rule-based and cue-bounded.** Medication status and trend
+  direction rely on curated cue lists; a summary phrasing a change outside
+  those lists would be scored as an error. Hallucination detection is bounded
+  by the benchmark's vocabulary, making it a floor rather than a ceiling.
+- **Negation handling is scope-based**, with no double negation, subject scope,
+  or hypothetical framing. Sufficient for this benchmark, not for real notes.
 - **Subgroup analysis is benchmark-level only.** Subgroup results describe this
   synthetic benchmark. They are **not** evidence about real-world population
   fairness and must never be presented as such.
-- **The risk classification is a portfolio framework**, not a validated
-  instrument, and carries no regulatory meaning.
+- **There is no risk score yet**, deliberately. Risk classification comes after
+  the evaluator is validated, not before, and will be a documented research
+  framework rather than a validated instrument.
 - **Passing this benchmark would not make a system safe for clinical use.** No
   result produced here can support that claim.
 
 ## Roadmap
 
-Phases 2–3 scale benchmark generation and annotation tooling. Phases 4–5 bring
-the evaluator implementations and failure detection. Phase 6 adds configurable
-scoring and risk classification, Phase 7 persistence and the full API, Phase 8
-the Streamlit dashboard, Phase 9 multi-model comparison, Phase 10 report export,
-and Phases 11–13 hardening, Docker, and packaging. See the
+Phase 4 adds real model outputs and LLM-assisted adjudication (structured,
+version-recorded, and never the unquestioned source of truth). Phase 5 extends
+failure detection, Phase 6 adds configurable scoring and risk classification,
+Phase 7 persistence and the full API, Phase 8 the Streamlit dashboard, Phase 9
+multi-model comparison, Phase 10 report export, and Phases 11–13 hardening,
+Docker, and packaging. See the
 [phase plan](docs/ARCHITECTURE.md#11-phase-plan).
 
 ## License
