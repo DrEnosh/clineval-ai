@@ -42,12 +42,64 @@ class Settings(BaseSettings):
     llm_api_key: str | None = None
     llm_provider: str | None = None
 
+    # Per-provider credentials. Separate fields rather than one shared key so a
+    # user can configure several providers at once, and so no provider can
+    # accidentally pick up another's credential. All default to None: the
+    # application runs fully offline with none of them set, and no benchmark
+    # data leaves the machine unless a provider is explicitly configured.
+    anthropic_api_key: str | None = None
+    openai_api_key: str | None = None
+    google_api_key: str | None = None
+
+    # Base URL override for OpenAI-compatible local servers (Ollama, vLLM,
+    # LM Studio). Set this and a local model runs through the same interface.
+    local_base_url: str | None = None
+
+    # Model names come from configuration, never hard-coded, because provider
+    # model identifiers change and a pinned name silently rots.
+    summarizer_model: str | None = None
+    judge_model: str | None = None
+
     # Where committed synthetic benchmark files live.
     benchmark_dir: Path = BASE_DIR / "data" / "synthetic"
+
+    # Generated model outputs are cached here so a benchmark can be re-evaluated
+    # without re-paying for generation. Runtime state - gitignored.
+    cache_dir: Path = BASE_DIR / "data" / "cache"
+    runs_dir: Path = BASE_DIR / "data" / "runs"
 
     @property
     def is_llm_configured(self) -> bool:
         return bool(self.llm_api_key and self.llm_provider)
+
+    def api_key_for(self, provider: str) -> str | None:
+        """The configured credential for a provider, or None.
+
+        Returns None rather than raising so callers can report a clear
+        "provider not configured" message instead of a traceback.
+        """
+        return {
+            "anthropic": self.anthropic_api_key,
+            "openai": self.openai_api_key,
+            "gemini": self.google_api_key,
+            "google": self.google_api_key,
+            # A local OpenAI-compatible server usually needs no real key.
+            "local": self.openai_api_key or "not-required",
+            "mock": "not-required",
+        }.get(provider.lower())
+
+    def configured_providers(self) -> list[str]:
+        """Providers with a usable credential, for reporting to the user."""
+        available = ["mock"]
+        if self.anthropic_api_key:
+            available.append("anthropic")
+        if self.openai_api_key:
+            available.append("openai")
+        if self.google_api_key:
+            available.append("gemini")
+        if self.local_base_url:
+            available.append("local")
+        return available
 
 
 settings = Settings()

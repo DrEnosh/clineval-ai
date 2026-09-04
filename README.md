@@ -50,24 +50,26 @@ Every score the platform reports traces back to records like this one.
 
 ## Status
 
-**Phases 1–3 of 13 are complete.** The foundation, the benchmark, and the
-deterministic evaluation engine are done: a reproducible 100-case benchmark
-built ground-truth-first, five evidence-backed evaluators, a configurable
-severity policy, self-validation by controlled failure injection, and 641
-passing tests at 98% coverage.
+**Phases 1–4 of 13 are complete.** The benchmark, the deterministic evaluation
+engine, and the model-generation and LLM-adjudication layers are done: a
+reproducible 100-case benchmark built ground-truth-first, five evidence-backed
+evaluators, self-validation by controlled failure injection, a provider
+abstraction with four backends plus an offline mock, versioned prompts,
+deterministic-first LLM adjudication, and 931 passing tests at 98% coverage.
 
-**No model has been evaluated, and no evaluation results exist anywhere in this
-repository.** Every output the engine has been run against comes from
-test-only providers, labelled as synthetic in their metadata. Real model
-outputs and LLM-assisted adjudication are Phase 4.
+**No real model has been evaluated.** Every generation so far comes from the
+deterministic mock provider and is labelled `is_real_model_output: false`. The
+pipeline is ready for a configured provider; running one is the user's choice
+and requires an explicit credential.
 
 | | |
 |---|---|
-| ✅ Repository, architecture, data schemas | ✅ 100-case generated benchmark + 10 curated cases |
-| ✅ Five deterministic evaluators | ✅ Integrity audit with CI-gating exit code |
-| ✅ Evidence-backed findings, configurable severity | ✅ Evaluator self-validation: 0 false positives, 9/9 injections detected |
-| ✅ Minimal runnable API | ✅ 641 passing tests, 98% coverage |
-| ⬜ LLM judge, risk scoring, DB, dashboard, reports | |
+| ✅ 100-case generated benchmark + 10 curated cases | ✅ Provider abstraction (Anthropic / OpenAI / Gemini / local / mock) |
+| ✅ Five deterministic evaluators | ✅ Versioned prompts, structured JSON judgments |
+| ✅ Evidence-backed findings, configurable severity | ✅ Deterministic-first adjudication with explicit disagreement |
+| ✅ Self-validation: 0 false positives, 9/9 injections detected | ✅ Output caching, cost/token/latency tracking |
+| ✅ Minimal runnable API | ✅ 931 passing tests, 98% coverage, no network in CI |
+| ⬜ Risk scoring, DB, dashboard, model comparison, reports | |
 
 See the [phase plan](docs/ARCHITECTURE.md#11-phase-plan) for what lands when.
 
@@ -233,6 +235,32 @@ injection; exits non-zero on regression):
 .venv/Scripts/python.exe -m scripts.validate_evaluators --cases 50
 ```
 
+**Evaluate a model end to end** (offline by default — mock provider, nothing
+sent anywhere):
+
+```bash
+.venv/Scripts/python.exe -m scripts.evaluate_benchmark --cases 10
+```
+
+**Exercise a specific failure mode:**
+
+```bash
+.venv/Scripts/python.exe -m scripts.evaluate_benchmark --cases 10 --behaviour negation_reversal
+```
+
+**Run with LLM adjudication** (mock judge; `--behaviour abstractive` produces
+the semantic ambiguity adjudication exists for):
+
+```bash
+.venv/Scripts/python.exe -m scripts.evaluate_benchmark --cases 10 --behaviour abstractive --adjudicate
+```
+
+**Generate adversarial prompt-injection cases** (opt-in, not in the default mix):
+
+```bash
+.venv/Scripts/python.exe -m scripts.generate_benchmark --cases 10 --seed 7 --difficulty ADVERSARIAL --categories prompt_injection
+```
+
 **Run the API:**
 
 ```bash
@@ -312,6 +340,40 @@ HIGH   negation_reversal   [negation_consistency v0.3.0]
   Fact:   SYN_0042-N001   Rule: CR-08   Match: alias   Confidence: 0.9
 ```
 
+### The LLM assists; it never decides
+
+An LLM judge is fallible, and possibly fallible in the same ways as the model
+it judges. So it is kept subordinate to the deterministic layer:
+
+```
+        Benchmark Ground Truth
+                  │
+        ┌─────────┴─────────┐
+        ▼                   ▼
+  Deterministic       LLM adjudication
+   evaluation         (only where the
+   (authoritative)     evaluator was unsure)
+        └─────────┬─────────┘
+                  ▼
+        Evaluation Finding
+     (both views always retained)
+```
+
+The judge is called only for findings whose answer can turn on wording — a
+paraphrase the matcher missed. It is **never** asked about value or dose
+errors: 1.4 is not 1.9 regardless of phrasing, and asking a model to
+second-guess that invites it to talk the evaluator out of a correct finding.
+
+Six documented rules govern disagreement, and **only one ever removes a
+finding**: a confident SUPPORTED judgment against an *omission* (the false
+positive adjudication exists to fix). A model saying "looks fine" about a
+detected **contradiction** escalates to `ADJUDICATION_REQUIRED` — it never
+erases it. Withdrawn findings stay in the run with the rule that withdrew them,
+and the headline metrics are deterministic and unadjusted, so a model's
+judgments never silently move the numbers.
+
+Full detail in [docs/LLM_EVALUATION.md](docs/LLM_EVALUATION.md).
+
 ### The evaluator is itself evaluated
 
 ```bash
@@ -377,10 +439,22 @@ itself:
   but not validated against any external standard.
 - **No clinician review.** Clinical content is plausible, not authoritative, and
   has not been reviewed by a licensed clinician.
-- **No model has been evaluated.** Phases 1–3 ship the benchmark and the
-  evaluation engine. Every output the engine has run against comes from
-  test-only providers, labelled `is_real_model_output: False`. No evaluation
-  numbers describing any real system appear anywhere in this repository.
+- **No real model has been evaluated.** Every generation so far comes from the
+  deterministic mock provider, labelled `is_real_model_output: false`. No
+  evaluation numbers describing any real system appear anywhere in this
+  repository.
+- **An LLM judge is fallible in correlated ways.** It may share blind spots
+  with the model it judges, especially if both come from the same family. That
+  risk is not eliminated here — it is contained, by keeping the judge
+  subordinate to deterministic evaluation and never letting it erase a
+  contradiction.
+- **Stated model confidence is not calibrated.** It is stored as
+  `model_reported_confidence` and used only as a conservative threshold.
+  Whether it corresponds to accuracy has not been measured.
+- **Prompt-injection defense is containment, not prevention.** Clinical notes
+  are treated as untrusted and delimited, never censored. No prompt-level
+  defense is complete — one more reason the deterministic layer, which has no
+  prompt to inject, stays authoritative.
 - **The evaluator is validated on synthetic text only.** Zero false positives
   and 9/9 injection detection are measured against generated summaries with
   regular structure. Those rates should not be assumed to transfer to real

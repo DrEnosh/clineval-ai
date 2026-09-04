@@ -41,6 +41,11 @@ concrete evaluator.
 │  app/evaluation/       Deterministic evaluation engine (P3)  │
 │    base.py             ← the contract                        │
 │    support.py          ← shared entity analysis engine       │
+│    llm/                LLM adjudication, subordinate (P4)    │
+├──────────────────────────────────────────────────────────────┤
+│  app/generation/       Model output generation + cache (P4)  │
+│  app/providers/        Provider abstraction, 4 backends (P4) │
+│  app/prompts/          Versioned prompts + injection defense │
 ├──────────────────────────────────────────────────────────────┤
 │  app/benchmark/        Synthetic case generation (P2)        │
 │  app/models/schemas.py Shared Pydantic contract  ◄─ everyone │
@@ -236,6 +241,40 @@ version, timestamp and configuration, retry safely on malformed output, and be
 labeled in the UI as a model-based judgment. Rule-based and LLM-based signals
 are combined rather than the latter replacing the former.
 
+### LLM adjudication (Phase 4)
+
+Model generation and LLM-assisted adjudication sit *beside* the deterministic
+engine, never above it. Full methodology in
+[docs/LLM_EVALUATION.md](LLM_EVALUATION.md).
+
+```
+app/providers/      ModelProvider interface; anthropic / openai / gemini /
+                    local / mock backends. SDKs imported lazily, so none is a
+                    hard dependency and the app runs with none installed.
+app/prompts/        Versioned prompt files with content hashes, plus the
+                    untrusted-content boundary (delimiting and escaping).
+app/generation/     ClinicalSummaryRequest/Response, the generator, and a
+                    deterministic output cache keyed on prompt hash and
+                    run_index as well as model and temperature.
+app/evaluation/llm/ Routing, strict JSON parsing, reconciliation, and judge
+                    evaluation metrics.
+```
+
+Three properties hold by construction:
+
+**Offline by default.** With no credential configured, only the mock provider
+can be built. Adjudication is disabled unless explicitly enabled, so a run
+never begins making paid external calls because a config file was present.
+
+**The LLM cannot override the deterministic layer.** Six documented rules
+govern disagreement and only one — a confident SUPPORTED judgment against an
+*omission* — ever withdraws a finding. A model's opinion never erases a
+detected contradiction; that escalates to `ADJUDICATION_REQUIRED`.
+
+**Metrics stay deterministic.** Headline metrics are computed pre-adjudication
+and are not adjusted by it. Withdrawn findings are retained in the run with the
+rule that withdrew them, so nothing is silently dropped.
+
 ## 6. Severity policy
 
 | Severity | Definition |
@@ -303,8 +342,8 @@ must check. `.env` is gitignored; `.env.example` is committed.
 | 1 | Architecture, schemas, evaluator interfaces, 10-case benchmark, minimal API, tests | **Complete** |
 | 2 | Ground-truth-first benchmark generation, criticality rules, integrity audit | **Complete** |
 | 3 | Deterministic evaluation engine, findings, severity, self-validation | **Complete** |
-| 4 | Evaluation engine implementations | Pending |
-| 5 | Failure detection (hallucination, negation, temporal, medication) | Pending |
+| 4 | Model generation, provider abstraction, LLM adjudication | **Complete** |
+| 5 | Extended failure detection and repeatability testing | Pending |
 | 6 | Scoring and risk framework | Pending |
 | 7 | Database + full API | Pending |
 | 8 | Streamlit dashboard | Pending |

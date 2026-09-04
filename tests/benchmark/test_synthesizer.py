@@ -133,11 +133,39 @@ class TestGenerationShape:
 
 
 class TestCategoryCoverage:
-    def test_a_full_run_exercises_every_category(self, config):
+    def test_a_full_run_exercises_every_default_category(self, config):
+        """Every category in a tier's pool must actually appear in a full run."""
         cases = generate_benchmark(case_count=100, seed=42, config=config)
         seen = {category for case in cases for category in case.categories}
-        missing = set(FailureModeCategory) - seen
+        expected: set[FailureModeCategory] = set()
+        for tier in config.tiers.values():
+            expected |= set(tier.pool) | set(tier.guaranteed)
+        missing = expected - seen
         assert not missing, f"categories never generated: {sorted(c.value for c in missing)}"
+
+    def test_prompt_injection_is_opt_in_only(self, config):
+        """Prompt-injection cases test the evaluation harness, not the
+        summarizer, so including them by default would dilute the
+        summarization benchmark. They stay reachable on request."""
+        default_run = generate_benchmark(case_count=100, seed=42, config=config)
+        assert not any(
+            FailureModeCategory.PROMPT_INJECTION in case.categories for case in default_run
+        )
+
+        requested = generate_benchmark(
+            case_count=5, seed=7, config=config,
+            difficulty=DifficultyTier.ADVERSARIAL,
+            categories=[FailureModeCategory.PROMPT_INJECTION],
+        )
+        assert all(
+            FailureModeCategory.PROMPT_INJECTION in case.categories for case in requested
+        )
+
+    def test_every_category_has_a_feature_builder(self):
+        """No category may exist without an implementation behind it."""
+        from app.benchmark.features import FEATURE_BUILDERS
+
+        assert set(FEATURE_BUILDERS) == set(FailureModeCategory)
 
     def test_selected_categories_follow_the_tier_configuration(self, config):
         from random import Random

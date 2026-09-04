@@ -26,13 +26,23 @@ class TestDefaults:
         for tier, tier_config in BenchmarkConfig().tiers.items():
             assert tier_config.pool, tier
 
-    def test_every_category_is_reachable_from_some_tier(self):
+    def test_every_summarization_category_is_reachable_from_some_tier(self):
+        """Every category the summarization benchmark is meant to exercise must
+        appear in some tier's pool.
+
+        `PROMPT_INJECTION` is deliberately excluded: it tests the evaluation
+        harness rather than the summarizer, so it is opt-in via
+        `--categories prompt_injection` instead of diluting the default mix.
+        """
         config = BenchmarkConfig()
         reachable: set[FailureModeCategory] = set()
         for tier_config in config.tiers.values():
             reachable |= set(tier_config.pool) | set(tier_config.guaranteed)
-        missing = set(FailureModeCategory) - reachable
+
+        opt_in = {FailureModeCategory.PROMPT_INJECTION}
+        missing = set(FailureModeCategory) - reachable - opt_in
         assert not missing, f"unreachable categories: {sorted(c.value for c in missing)}"
+        assert not (reachable & opt_in), "opt-in categories must not be in a default pool"
 
     def test_shipped_config_file_parses(self):
         assert DEFAULT_CONFIG_PATH.exists(), "config/benchmark.yaml should ship with the repo"

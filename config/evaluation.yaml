@@ -13,6 +13,46 @@
 # These are RESEARCH FRAMEWORK labels. They are not clinical severity
 # classifications and carry no regulatory meaning.
 
+# LLM adjudication routing.
+#
+# Disabled by default and deliberately so: an evaluation must never start
+# making paid external calls because a config file was present. Enable it here
+# or with --adjudicate on the CLI, and configure a judge model.
+#
+# The LLM is not ground truth. It adjudicates findings the deterministic
+# evaluator was unsure about and can never silently override one - see
+# app/evaluation/llm/reconciler.py for the rules that govern disagreement.
+adjudication:
+  enabled: false
+
+  # Deterministic confidence at or below which a finding is sent to the judge.
+  # 0.95 routes PARTIAL (0.7) and ALIAS (0.9) matches while leaving exact and
+  # normalized matches (1.0) alone - there is nothing to adjudicate there.
+  confidence_threshold: 0.95
+
+  # An LLM judgment below this confidence is never strong enough to withdraw a
+  # deterministic finding; the result stays ADJUDICATION_REQUIRED instead.
+  min_judgment_confidence: 0.75
+
+  # Route findings whose deterministic match was weak (partial/alias/none).
+  route_weak_matches: true
+
+  # Cap on judge calls per run. 0 means unlimited.
+  max_calls_per_run: 0
+
+  # Only findings whose answer can turn on wording. Value and dose errors are
+  # deliberately excluded: 1.4 is not 1.9 regardless of phrasing, and asking a
+  # model to second-guess that invites it to talk the evaluator out of a
+  # correct finding.
+  eligible_finding_types:
+    - critical_omission
+    - non_critical_omission
+    - contradiction
+    - medication_omission
+    - negation_omission
+    - temporal_information_loss
+    - unsupported_addition
+
 severity:
   # A finding about a fact the benchmark marked critical escalates one step
   # up the ladder (INFO -> LOW -> MODERATE -> HIGH -> CRITICAL).

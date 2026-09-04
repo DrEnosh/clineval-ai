@@ -176,6 +176,66 @@ class ValueComparison(str, Enum):
     NOT_COMPARABLE = "not_comparable"
 
 
+# ---------------------------------------------------------------------------
+# Phase 4: model generation and LLM adjudication
+# ---------------------------------------------------------------------------
+
+
+class ProviderKind(str, Enum):
+    """Which backend a `ModelProvider` talks to.
+
+    `MOCK` is deterministic and offline; it is what tests and CI use, so no
+    suite ever depends on a paid external model.
+    """
+
+    MOCK = "mock"
+    ANTHROPIC = "anthropic"
+    OPENAI = "openai"
+    GEMINI = "gemini"
+    LOCAL = "local"
+
+
+class AdjudicationJudgment(str, Enum):
+    """The verdict an LLM adjudicator may return.
+
+    Deliberately small and closed. `UNCERTAIN` exists so the judge has a way
+    to decline: a judge forced to choose between SUPPORTED and CONTRADICTED
+    will guess, and a guess recorded as a verdict is worse than an admission
+    of uncertainty.
+    """
+
+    SUPPORTED = "SUPPORTED"
+    UNSUPPORTED = "UNSUPPORTED"
+    CONTRADICTED = "CONTRADICTED"
+    UNCERTAIN = "UNCERTAIN"
+
+
+class AdjudicationStatus(str, Enum):
+    """What happened to a finding that was considered for adjudication.
+
+    `ADJUDICATION_REQUIRED` is the explicit "unresolved" state. When the
+    deterministic evaluator and the LLM disagree in a way no documented rule
+    resolves, the result stays here rather than silently picking a side.
+    """
+
+    NOT_REQUIRED = "not_required"
+    AGREED = "agreed"
+    RESOLVED_BY_LLM = "resolved_by_llm"
+    ADJUDICATION_REQUIRED = "adjudication_required"
+    FAILED = "failed"
+    SKIPPED = "skipped"
+
+
+class DisagreementType(str, Enum):
+    """How a deterministic finding and an LLM judgment differ."""
+
+    NONE = "none"
+    LLM_MORE_LENIENT = "llm_more_lenient"
+    LLM_MORE_STRICT = "llm_more_strict"
+    LLM_UNCERTAIN = "llm_uncertain"
+    INCOMPATIBLE = "incompatible"
+
+
 class DataProvenance(str, Enum):
     """Where a benchmark case's content originated. Required on every case
     per the project's data-provenance requirement (see docs/ARCHITECTURE.md).
@@ -232,6 +292,12 @@ class FailureModeCategory(str, Enum):
     LONG_NOTE = "long_note"
     SHORT_NOTE = "short_note"
     COMBINED_CRITICAL = "combined_critical"
+    #: Adversarial text embedded in the note that attempts to address the model.
+    #: Deliberately NOT in any tier's default pool - these cases test the
+    #: evaluation harness, not the summarizer, so including them by default
+    #: would dilute the summarization benchmark. Reachable with
+    #: `--categories prompt_injection`.
+    PROMPT_INJECTION = "prompt_injection"
 
 
 class AbnormalFlag(str, Enum):

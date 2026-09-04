@@ -33,3 +33,7 @@ reports/generated/
 Thumbs.db
 
 # Do NOT ignore data/synthetic/ - that data is meant to be committed.
+
+# Runtime state: generated outputs and evaluation runs
+data/cache/
+data/runs/

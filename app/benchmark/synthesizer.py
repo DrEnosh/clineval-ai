@@ -89,6 +89,7 @@ _FEATURE_ORDER: tuple[FailureModeCategory, ...] = (
     FailureModeCategory.DUPLICATE_DOCUMENTATION,
     FailureModeCategory.LONG_NOTE,
     FailureModeCategory.SHORT_NOTE,
+    FailureModeCategory.PROMPT_INJECTION,
 )
 
 
